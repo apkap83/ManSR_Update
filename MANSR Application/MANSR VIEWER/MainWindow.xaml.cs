@@ -170,7 +170,7 @@ namespace MANSR_VIEWER
                 {
                     Application.Current.Shutdown();
                     return false; // Connectivity NOT OK!
-                    
+
                 }
             }
             return true; // Connectivity OK!
@@ -1012,7 +1012,7 @@ namespace MANSR_VIEWER
                     a1 = new DataGridTextColumn();
                     a1.Binding = new Binding("DeactivationDateTime");
                     a1.Binding.StringFormat = "d MMM yyyy HH:mm";
-                    
+
                     dataGrid_deactivated_analysis.Columns.Insert(4, a1);
                     dataGrid_deactivated_analysis.Columns.RemoveAt(5);
                     dataGrid_deactivated_analysis.Columns[4].Header = "Event Date Time";
@@ -1621,6 +1621,45 @@ namespace MANSR_VIEWER
                                     break;
                             }
                         }
+                        else if (combo_pick_specific.Text == "All")
+                        {
+                            switch (combo2)
+                            {
+                                case "2G":
+                                    myList = func.GetList(x, loop_date, latestdate, combo1, null, combo3, "2G", false);
+                                    line2G.DataSource = myList;
+                                    _Set_Interval_For_X_Axis_History_Graph(myList);
+                                    break;
+                                case "3G":
+                                    myList = func.GetList(x, loop_date, latestdate, combo1, null, combo3, "3G", false);
+                                    line3G.DataSource = myList;
+                                    _Set_Interval_For_X_Axis_History_Graph(myList);
+                                    break;
+                                case "4G":
+                                    myList = func.GetList(x, loop_date, latestdate, combo1, null, combo3, "4G", false);
+                                    line4G.DataSource = func.GetList(x, loop_date, latestdate, combo1, null, combo3, "4G", false);
+                                    _Set_Interval_For_X_Axis_History_Graph(myList);
+                                    break;
+                                default:
+                                    List<KeyValuePair<string, int>> myList2G = new List<KeyValuePair<string, int>>();
+                                    List<KeyValuePair<string, int>> myList3G = new List<KeyValuePair<string, int>>();
+                                    List<KeyValuePair<string, int>> myList4G = new List<KeyValuePair<string, int>>();
+
+                                    myList2G = func.GetList(x, loop_date, latestdate, combo1, null, combo3, "2G", false);
+                                    myList3G = func.GetList(x, loop_date, latestdate, combo1, null, combo3, "3G", false);
+                                    myList4G = func.GetList(x, loop_date, latestdate, combo1, null, combo3, "4G", false);
+
+                                    line2G.DataSource = myList2G;
+                                    line3G.DataSource = myList3G;
+                                    line4G.DataSource = myList4G;
+
+                                    _Set_Interval_For_X_Axis_History_Graph(myList2G);
+                                    _Set_Interval_For_X_Axis_History_Graph(myList3G);
+                                    _Set_Interval_For_X_Axis_History_Graph(myList4G);
+
+                                    break;
+                            }
+                        }
                         else
                         {
                             //start if a specific reason is chosen
@@ -1647,7 +1686,7 @@ namespace MANSR_VIEWER
                                         List<KeyValuePair<string, int>> myList2G = new List<KeyValuePair<string, int>>();
                                         List<KeyValuePair<string, int>> myList3G = new List<KeyValuePair<string, int>>();
                                         List<KeyValuePair<string, int>> myList4G = new List<KeyValuePair<string, int>>();
-
+                                        
                                         myList2G = func.GetList2(x, loop_date, latestdate, combo_pick_specific.Text, combo3, "2G", false);
                                         myList3G = func.GetList2(x, loop_date, latestdate, combo_pick_specific.Text, combo3, "3G", false);
                                         myList4G = func.GetList2(x, loop_date, latestdate, combo_pick_specific.Text, combo3, "4G", false);
@@ -1689,7 +1728,16 @@ namespace MANSR_VIEWER
                                 else if (combo2.Equals("2G"))
                                 {
                                     List<KeyValuePair<string, int>> myList2G = new List<KeyValuePair<string, int>>();
-                                    myList2G = func.GetList(x, loop_date, latestdate, combo1, combo_pick_specific.Text, combo3, "2G");
+
+                                    if (combo3 == "Operational" && combo_pick_specific.Text == "All")
+                                    {
+                                        myList2G = func.GetList(x, loop_date, latestdate, combo1, null, combo3, "2G", false);
+                                    }
+                                    else
+                                    {
+                                        myList2G = func.GetList(x, loop_date, latestdate, combo1, combo_pick_specific.Text, combo3, "2G");
+                                    }
+
                                     line2G.DataSource = myList2G;
                                     _Set_Interval_For_X_Axis_History_Graph(myList2G);
                                 }
@@ -1737,6 +1785,82 @@ namespace MANSR_VIEWER
 
             combo3 = combo_pick_reason.Text;
 
+            if (combo_pref.Text != "All")
+            {
+                if (combo3.Equals("Operational"))
+                {
+                    combo_pick_specific.Items.Clear();
+                    if (combo_pref.Text == "All") { combo_pick_specific.Items.Add(("All")); }
+                    combo_pick_specific.Items.Add(("Antenna"));
+                    combo_pick_specific.Items.Add(("Cosmote Power Problem"));
+                    combo_pick_specific.Items.Add(("Disinfection"));
+                    combo_pick_specific.Items.Add(("Fiber Cut"));
+                    combo_pick_specific.Items.Add(("Generator Failure"));
+                    combo_pick_specific.Items.Add(("Link"));
+                    combo_pick_specific.Items.Add(("Link Due To Power Problem"));
+                    combo_pick_specific.Items.Add(("Modem"));
+                    combo_pick_specific.Items.Add(("OTE Problem"));
+                    combo_pick_specific.Items.Add(("Power Problem"));
+                    combo_pick_specific.Items.Add(("PPC Power Failure"));
+                    combo_pick_specific.Items.Add(("Quality"));
+                    combo_pick_specific.Items.Add(("RBS Problem"));
+                    combo_pick_specific.Items.Add(("Temperature"));
+                    combo_pick_specific.Items.Add(("Vodafone Link Problem"));
+                    combo_pick_specific.Items.Add(("Vodafone Power Problem"));
+                    combo_pick_specific.IsEnabled = true;
+                    combo_pick_specific.SelectedIndex = 0;
+
+                    // In order to Remove "All" from combo_pref we remove all and we execute again the initialization function that populates it -- but without "All" since it is included in XAML
+                    //combo_pref.Items.Clear();
+                    //func.InitializeComboboxPrefecturesChoices(combo_pref);
+                    //combo_pref.SelectedIndex = 0;
+                }
+                else if (combo3.Equals("Retention"))
+                {
+                    combo_pick_specific.Items.Clear();
+                    if (combo_pref.Text == "All") { combo_pick_specific.Items.Add(("All")); }
+                    combo_pick_specific.Items.Add(("Access"));
+                    combo_pick_specific.Items.Add(("Antenna"));
+                    combo_pick_specific.Items.Add(("Cabinet"));
+                    combo_pick_specific.Items.Add(("Disaster Due To Fire"));
+                    combo_pick_specific.Items.Add(("Disaster Due To Flood"));
+                    combo_pick_specific.Items.Add(("Owner Reaction"));
+                    combo_pick_specific.Items.Add(("People Reaction"));
+                    combo_pick_specific.Items.Add(("PPC Intention"));
+                    combo_pick_specific.Items.Add(("Reengineering"));
+                    combo_pick_specific.Items.Add(("Renovation"));
+                    combo_pick_specific.Items.Add(("Shelter"));
+                    combo_pick_specific.Items.Add(("Thievery"));
+                    combo_pick_specific.Items.Add(("Unpaid Bill"));
+                    combo_pick_specific.Items.Add(("Vandalism"));
+                    combo_pick_specific.SelectedIndex = 0;
+                    combo_pick_specific.IsEnabled = true;
+
+                    // In order to Add "All" in combo_pref we remove all and we execute again the initialization function that populates it.
+                    //combo_pref.Items.Clear();
+                    //func.InitializeComboboxPrefecturesChoices(combo_pref);
+                    //combo_pref.SelectedIndex = 0;
+
+                }
+                else if (combo3.Equals("Licensing"))
+                {
+                    combo_pick_specific.Items.Clear();
+                    if (combo_pref.Text == "All") { combo_pick_specific.Items.Add(("All")); }
+                    combo_pick_specific.Items.Add("N/A");
+                    combo_pick_specific.SelectedIndex = 0;
+                    combo_pick_specific.IsEnabled = false;
+                }
+                else if (combo3.Equals("Deactivated"))
+                {
+                    combo_pick_specific.Items.Clear();
+                    if (combo_pref.Text == "All") { combo_pick_specific.Items.Add(("All")); }
+                    combo_pick_specific.Items.Add("N/A");
+                    combo_pick_specific.SelectedIndex = 0;
+                    combo_pick_specific.IsEnabled = false;
+                }
+            }
+
+
             if (combo3.Equals("Show all"))
             {
                 combo_pick_specific.Items.Clear();
@@ -1758,6 +1882,7 @@ namespace MANSR_VIEWER
             else if (combo3.Equals("Operational"))
             {
                 combo_pick_specific.Items.Clear();
+                if (combo_pref.Text == "All") { combo_pick_specific.Items.Add(("All")); }
                 combo_pick_specific.Items.Add(("Antenna"));
                 combo_pick_specific.Items.Add(("Cosmote Power Problem"));
                 combo_pick_specific.Items.Add(("Disinfection"));
@@ -1785,6 +1910,7 @@ namespace MANSR_VIEWER
             else if (combo3.Equals("Retention"))
             {
                 combo_pick_specific.Items.Clear();
+                if (combo_pref.Text == "All") { combo_pick_specific.Items.Add(("All")); }
                 combo_pick_specific.Items.Add(("Access"));
                 combo_pick_specific.Items.Add(("Antenna"));
                 combo_pick_specific.Items.Add(("Cabinet"));
@@ -1811,6 +1937,7 @@ namespace MANSR_VIEWER
             else if (combo3.Equals("Licensing"))
             {
                 combo_pick_specific.Items.Clear();
+                if (combo_pref.Text == "All") { combo_pick_specific.Items.Add(("All")); }
                 combo_pick_specific.Items.Add("N/A");
                 combo_pick_specific.SelectedIndex = 0;
                 combo_pick_specific.IsEnabled = false;
@@ -1818,6 +1945,7 @@ namespace MANSR_VIEWER
             else if (combo3.Equals("Deactivated"))
             {
                 combo_pick_specific.Items.Clear();
+                if (combo_pref.Text == "All") { combo_pick_specific.Items.Add(("All")); }
                 combo_pick_specific.Items.Add("N/A");
                 combo_pick_specific.SelectedIndex = 0;
                 combo_pick_specific.IsEnabled = false;

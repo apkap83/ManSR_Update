@@ -855,7 +855,7 @@ IsTabStop="True" BorderBrush="#00000000" Background="#D3D3D3">
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Row="0" Grid.Column="0" Margin="6" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal">
-                    <ComboBox x:Name="combo_pref" ItemsSource="{Binding}" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" TabIndex="1" DropDownClosed="CleanUpHistoryChart">
+                    <ComboBox x:Name="combo_pref" ItemsSource="{Binding}" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" TabIndex="1" DropDownClosed="_Combo_pick_reason_DropDownClosed">
                         <ComboBoxItem Content="All" IsSelected="True" />
                     </ComboBox>
                     <ComboBox x:Name="combo_tech" HorizontalAlignment="Left" FontSize="14" VerticalAlignment="Top" Width="100" TabIndex="2" DropDownClosed="CleanUpHistoryChart">

@@ -186,6 +186,22 @@ namespace MANSR_VIEWER
                                     {
                                         returnList.Add(new KeyValuePair<string, int>(cursorDate, msdr3.GetInt32("Unavailable" + technology)));
                                     }
+                                    else if (failure_category == "Operational")
+                                    {
+                                        returnList.Add(new KeyValuePair<string, int>(cursorDate, msdr3.GetInt32("Unavailable" + technology + "Operational")));
+                                    }
+                                    else if (failure_category == "Retention")
+                                    {
+                                        returnList.Add(new KeyValuePair<string, int>(cursorDate, msdr3.GetInt32("Unavailable" + technology + "Retention")));
+                                    }
+                                    else if (failure_category == "Licensing")
+                                    {
+                                        returnList.Add(new KeyValuePair<string, int>(cursorDate, msdr3.GetInt32("Unavailable" + technology + "Licensing")));
+                                    }
+                                    else if (failure_category == "Deactivated")
+                                    {
+                                        returnList.Add(new KeyValuePair<string, int>(cursorDate, msdr3.GetInt32("Unavailable" + technology + "Deact")));
+                                    }
                                     else
                                     {
                                         if (pickName == "All")
