@@ -1,0 +1,205 @@
+﻿<Window 
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MANSR_VIEWER"
+        
+        xmlns:dxf="http://schemas.devexpress.com/winfx/2008/xaml/map"
+        xmlns:dxc="http://schemas.devexpress.com/winfx/2008/xaml/charts"
+        xmlns:dxt="http://schemas.devexpress.com/winfx/2008/xaml/core"
+        
+        xmlns:dxprg="http://schemas.devexpress.com/winfx/2008/xaml/propertygrid" xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" x:Class="MANSR_VIEWER.Details_Window"
+        Icon="./Telecomm.ico"
+        mc:Ignorable="d"
+        dxt:ThemeManager.ThemeName="Office2013LightGray"
+        Title="Analysis For Operational Issues" Height="400" Width="400" MinHeight="760" MinWidth="950" SnapsToDevicePixels="True">
+
+    <Window.Resources>
+        <DataTemplate x:Key="CustomPushpin1">
+            <StackPanel ToolTipService.ToolTip="{Binding Path=MapItem.Information}" >
+                <Canvas Width="1" Height="5" Panel.ZIndex="1">
+                    <Border Height="Auto" Width="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                BorderBrush="White" Background="{Binding Path=MapItem.TextBrush}" CornerRadius="3,3,3,3">
+                        <TextBlock x:Name="L1" Text="{Binding Path=MapItem.Text}" Foreground="White"  FontFamily="Arial" FontSize="15" 
+                                       FontWeight="Bold" FontStyle="Normal" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </Canvas>
+            </StackPanel>
+        </DataTemplate>
+
+        <Style TargetType="{x:Type Control}" x:Key="DatePickerTextBoxStyle">
+            <!--<Setter Property="BorderThickness" Value="0"/>-->
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontFamily" Value="Sergoe UI"/>
+            <!--<Setter Property="HorizontalAlignment" Value="Center"/>-->
+            <!--<Setter Property="Background" Value="{x:Null}"/>-->
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+
+        <Style TargetType="{x:Type DatePickerTextBox}" >
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <TextBox x:Name="PART_TextBox"
+                             Text="{Binding Path=SelectedDate, StringFormat='d MMM yyyy', RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}}" Style="{StaticResource DatePickerTextBoxStyle}" >
+                        </TextBox>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+
+    <dxt:DXTabControl x:Name="tabControl"  HorizontalAlignment="Stretch" Height="Auto" VerticalAlignment="Stretch" Width="Auto" Grid.ColumnSpan="3">
+        <dxt:DXTabItem Header="Map View" Foreground="#FF0C014F" FontWeight="Bold" Height="23" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Grid Height="Auto" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <dxf:MapControl x:Name="myMap" Grid.ColumnSpan="3" Grid.RowSpan="3" Panel.ZIndex="1" CenterPoint="38.323911,26.058537" ZoomLevel="6"  BorderThickness="3" MouseLeftButtonDown="myMap_MouseLeftButtonDown">
+                    <dxf:ImageTilesLayer >
+                        <dxf:OpenStreetMapDataProvider TileUriTemplate="http://{subdomain}.tile.openstreetmap.org/{tileLevel}/{tileX}/{tileY}.png" Kind="Transport"/>
+                    </dxf:ImageTilesLayer>
+                    <dxf:VectorLayer>
+                        <dxf:MapItemStorage x:Name="pinsLayer"/>
+                    </dxf:VectorLayer>
+                </dxf:MapControl>
+
+                <StackPanel Grid.Row="0" Grid.Column="1" Panel.ZIndex="1" ClipToBounds="True" Grid.ColumnSpan="1" Grid.RowSpan="1" HorizontalAlignment="Center" VerticalAlignment="Top" Orientation="Vertical">
+                <Border Height="26" Width="Auto" Background="#FF0C014F"  ClipToBounds="True" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="3" BorderBrush="#FF0C014F">
+                    <StackPanel Panel.ZIndex="1" Width="Auto" HorizontalAlignment="Stretch" ClipToBounds="True" VerticalAlignment="Stretch" Orientation="Horizontal">
+                        <Rectangle x:Name="RectangleObject" Width="20" Height="20" Fill="#FF2C7FB8" Stroke="White" ClipToBounds="True"/>
+                        <Border Height="20" Width="Auto" Background="#FF0C014F" ClipToBounds="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="1.5" BorderBrush="White">
+                            <TextBlock x:Name="txtBlock_L2" Text="Operational Issues " FontFamily="Arial" ClipToBounds="True" FontSize="17" FontWeight="Bold" FontStyle="Oblique" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White"/>
+                        </Border>
+                        
+                    </StackPanel>
+                </Border>
+                    <Border Height="26" Width="150" Background="#FF0C014F"  ClipToBounds="True"  HorizontalAlignment="Center" VerticalAlignment="Top" BorderThickness="2.0" BorderBrush="White">
+                        <TextBlock x:Name="txtBlock_DateOfReport" Text="20 May 2017" FontFamily="Arial" FontSize="17" FontWeight="Bold" FontStyle="Oblique" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
+                    </Border>
+
+                </StackPanel>
+
+                <StackPanel Grid.Row="0" Grid.Column="1" Panel.ZIndex="1" ClipToBounds="True" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Right" VerticalAlignment="Top" Orientation="Vertical">
+                    <DataGrid x:Name="dataGrid_specific" Margin="1" IsHitTestVisible="False" HorizontalAlignment="Right" Height="Auto" IsReadOnly="True" 
+                                  VerticalAlignment="Top" Width="322" BorderThickness="3" BorderBrush="#FF0C014F" Background="LightGray" 
+                                  FontStyle="Oblique" FontFamily="Arial" FontSize="10" Canvas.Top="6" HorizontalScrollBarVisibility="Disabled"  
+                                  HeadersVisibility="None" VerticalScrollBarVisibility="Disabled" Canvas.Left="10" >
+                        <DataGrid.Columns>
+                            <DataGridTextColumn >
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style>
+                                        <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                        <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
+                <StackPanel Grid.Row="2" Grid.Column="0" Margin="10" Panel.ZIndex="1" HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Vertical">
+                    <DatePicker x:Name="datetime_MapView" Margin="2.5" Width="128" Panel.ZIndex="1" HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="2" TabIndex="4" CalendarClosed="datetime_MapView_CalendarClosed">
+                        <DatePicker.BorderBrush>
+                            <LinearGradientBrush EndPoint="0.5,0" StartPoint="0.5,1">
+                                <GradientStop Color="#FFA3AEB9" Offset="0"/>
+                                <GradientStop Color="#FF8399A9" Offset="0.375"/>
+                                <GradientStop Color="#FF718597" Offset="0.375"/>
+                                <GradientStop Color="#FFB9B9B9" Offset="1"/>
+                            </LinearGradientBrush>
+                        </DatePicker.BorderBrush>
+                    </DatePicker>
+                    <StackPanel Panel.ZIndex="1" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal">
+                        <ComboBox x:Name="comboBox_Perf_Area_Sites" Margin="2.5" Panel.ZIndex="1" FontSize="15" HorizontalAlignment="Left" Height="Auto" VerticalAlignment="Top" Width="155" TabIndex="1">
+                            <ComboBoxItem IsSelected="True" Content="Prefectures/Areas"/>
+                            <ComboBoxItem Content="Sites"/>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <Border Margin="2.5" Height="Auto" Width="100" Background="#FFFFFF"  HorizontalAlignment="Left" 
+                            VerticalAlignment="Center" BorderThickness="1.0" BorderBrush="LightGray"
+                            Panel.ZIndex="1">
+                        <CheckBox x:Name="checkBoxDuration" Panel.ZIndex="1" BorderThickness="10" FlowDirection="RightToLeft"   
+                                  FontSize="15" IsChecked="False" HorizontalAlignment="Left"   
+                                  Height="Auto" VerticalAlignment="Top" Width="Auto"
+                              BorderBrush="Black" Click="checkBoxDuration_Click" 
+                               >
+                            <TextBlock FontFamily="Segoe UI" FontSize="15" FontWeight="Bold" Panel.ZIndex="1" FontStyle="Normal" Margin="3,-2,3,0">Duration</TextBlock>
+                        </CheckBox>
+                    </Border>
+
+                    <ListView x:Name="MyReasonsListView" Margin="2.5" Height="Auto">
+
+                    </ListView>
+
+                </StackPanel>
+            </Grid>
+        </dxt:DXTabItem>
+        <dxt:DXTabItem Header="Details" Foreground="#FF0C014F" FontWeight="Bold" Height="23" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+            <Grid Height="Auto" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Panel.ZIndex="1" Width="Auto"  Margin="2.5" Grid.Row="0" Grid.Column="0" Orientation="Vertical" ClipToBounds="True" VerticalAlignment="Center">
+                    <!--<Border x:Name="detailedTabHeaderBorder" Height="20" Width="Auto" Background="#FF0C014F" ClipToBounds="True" HorizontalAlignment="Left"
+                            VerticalAlignment="Center" BorderThickness="1.5" BorderBrush="White">-->
+                        <TextBlock x:Name="txtBlock_L2_Details" Text="Operational Issues 09/05/2017 " FontFamily="FF Cube OT Cond"  
+                                   ClipToBounds="True" FontSize="20" FontWeight="Bold" FontStyle="Normal" 
+                                   HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#2B579A"/>
+                        
+                    <!--</Border>-->
+                </StackPanel>
+
+                <StackPanel Panel.ZIndex="1" Width="Auto" Grid.Row="0" Grid.Column="2" Orientation="Vertical" ClipToBounds="True" Margin="2.5" VerticalAlignment="Center">
+                    <Button x:Name="btn_ExportDataGridToExcel" Width="170" Height="Auto" FontSize="15" Content="Export" Click="btn_ExportDataGridToExcel_Click"  HorizontalAlignment="Right"/>
+                </StackPanel>
+
+                    <DockPanel Panel.ZIndex="1" Width="Auto" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="2.5" ClipToBounds="True">
+                        <!--<ScrollViewer HorizontalScrollBarVisibility="Auto"  VerticalScrollBarVisibility="Auto">-->
+                            <DataGrid x:Name="dataGrid_details" IsReadOnly="True" AutoGenerateColumns="False" SelectionMode="Extended" 
+                              CanUserReorderColumns="True" CanUserResizeColumns="True" CanUserResizeRows="False" CanUserSortColumns="True" 
+                              SelectionUnit="FullRow" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Top"
+                              ClipboardCopyMode="IncludeHeader"
+                              >
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Binding="{Binding  SiteName}" Header="Site Name" Width="Auto"></DataGridTextColumn>
+                                    <DataGridTextColumn Binding="{Binding   Region}" Header="Region" Width="Auto"></DataGridTextColumn>
+                                    <DataGridTextColumn Binding="{Binding   IndicatorPrefArea}" Header="Indicator Pref Area" Width="Auto"></DataGridTextColumn>
+                                    <DataGridTextColumn Binding="{Binding   NameofPrefArea}" Header="Name of Pref Area" Width="Auto"></DataGridTextColumn>
+                                    <DataGridTextColumn Binding="{Binding   Technology}" Header="Technology" Width="Auto"></DataGridTextColumn>
+                                    <DataGridTextColumn Binding="{Binding   EventDateTime}" Header="Event Date Time" Width="Auto"></DataGridTextColumn>
+                                    <DataGridTextColumn Binding="{Binding   ActionsTaken}" Header="ActionsTaken" Width="Auto"></DataGridTextColumn>
+                                    <DataGridTextColumn Binding="{Binding   Comments}" Header="Comments" Width="Auto"></DataGridTextColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                    <!-- </ScrollViewer>-->
+                    </DockPanel>
+                <StackPanel Grid.Row="2" Grid.Column="0" Margin="10" VerticalAlignment="Top">
+                <ListView x:Name="MyReasonsDetailedListView"  Panel.ZIndex="1" Height="Auto" Width="Auto" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+
+                    </ListView>
+
+                </StackPanel>
+            </Grid>
+        </dxt:DXTabItem>
+    </dxt:DXTabControl>
+</Window>

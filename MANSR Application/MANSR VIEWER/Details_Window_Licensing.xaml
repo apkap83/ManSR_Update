@@ -1,0 +1,101 @@
+﻿<Window x:Class="MANSR_VIEWER.Details_Window_Licensing"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MANSR_VIEWER"
+        
+        xmlns:dxf="http://schemas.devexpress.com/winfx/2008/xaml/map"
+        xmlns:dxc="http://schemas.devexpress.com/winfx/2008/xaml/charts"
+        xmlns:dxt="http://schemas.devexpress.com/winfx/2008/xaml/core"
+        
+        xmlns:dxprg="http://schemas.devexpress.com/winfx/2008/xaml/propertygrid" xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+        Icon="./Telecomm.ico"
+        mc:Ignorable="d"
+        dxt:ThemeManager.ThemeName="Office2013LightGray"
+        
+        Title="Details_Window_Licensing" Height="400" Width="400" MinHeight="760" MinWidth="1270">
+
+    <Window.Resources>
+        <Style TargetType="{x:Type Control}" x:Key="DatePickerTextBoxStyle">
+            <!--<Setter Property="BorderThickness" Value="0"/>-->
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontFamily" Value="Sergoe UI"/>
+            <!--<Setter Property="HorizontalAlignment" Value="Center"/>-->
+            <!--<Setter Property="Background" Value="{x:Null}"/>-->
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+
+        <Style TargetType="{x:Type DatePickerTextBox}" >
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <TextBox x:Name="PART_TextBox"
+                             Text="{Binding Path=SelectedDate, StringFormat='d MMM yyyy', RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}}" Style="{StaticResource DatePickerTextBoxStyle}" >
+                        </TextBox>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+
+    <dxt:DXTabControl x:Name="tabControl"  HorizontalAlignment="Stretch" Height="Auto" VerticalAlignment="Stretch" Width="Auto" Grid.ColumnSpan="3">
+        <dxt:DXTabItem Header="Licensing Analysis" Foreground="#FF0C014F" FontWeight="Bold" Height="23" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <Grid Background="#D3D3D3">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Panel.ZIndex="1" Width="Auto" Margin="10" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1"  Height="40" Orientation="Horizontal"  HorizontalAlignment="Left" ClipToBounds="True">
+                    <!--<Border Height="20" Width="249" Background="#FF0C014F" ClipToBounds="True" HorizontalAlignment="Left"
+                                VerticalAlignment="Top"  BorderThickness="1.5" BorderBrush="White"> -->
+                    <TextBlock x:Name="txtBlock_Licensing_Details" Text="Licensing Issues 09 Mar 2017 " FontFamily="FF Cube OT Cond" 
+                                       ClipToBounds="True" FontSize="22" FontWeight="Bold" FontStyle="Normal" 
+                                       HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#2B579A" Width="Auto"/>
+                    <!--</Border>-->
+                </StackPanel>
+                <StackPanel Panel.ZIndex="1" Width="Auto" Grid.Row="0" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" ClipToBounds="True">
+                    <DatePicker x:Name="dateTime_license_details" Width="128" VerticalAlignment="Center"/>
+                    <Button x:Name="btn_ExportDataGridToExcel" Margin="10"  Width="150" FontSize="15" Content="Export Data" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btn_ExportDataGridToExcel_Click" />
+                </StackPanel>
+                <DockPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4">
+                    <!--<ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch">-->
+                    <DataGrid x:Name="dataGrid_licensing_analysis" IsReadOnly="True" SelectionMode="Extended" 
+                                  CanUserReorderColumns="True" CanUserResizeColumns="True" CanUserResizeRows="True" CanUserSortColumns="True" 
+                                SelectionUnit="FullRow" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                ClipboardCopyMode="IncludeHeader"
+                                AutoGenerateColumns="False"
+                                >
+
+                        <DataGrid.Resources>
+                            <Style TargetType="{x:Type TextBlock}" x:Key="WrapText">
+                                <Setter Property="TextWrapping" Value="Wrap"/>
+                            </Style>
+                        </DataGrid.Resources>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding  SiteName}" Header="Site Name"  ElementStyle="{StaticResource WrapText}" Width="150"></DataGridTextColumn>
+                            <DataGridTextColumn Binding="{Binding   Region}" Header="Region" ElementStyle="{StaticResource WrapText}" Width="150"></DataGridTextColumn>
+                            <DataGridTextColumn Binding="{Binding   IndicatorPrefArea}" Header="Indicator Pref Area" ElementStyle="{StaticResource WrapText}" Width="150"></DataGridTextColumn>
+                            <DataGridTextColumn Binding="{Binding   NameofPrefArea}" Header="Name of Pref Area" ElementStyle="{StaticResource WrapText}" Width="150"></DataGridTextColumn>
+                            <DataGridTextColumn Binding="{Binding   Technology}" Header="Technology" ElementStyle="{StaticResource WrapText}" Width="80"></DataGridTextColumn>
+                            <DataGridTextColumn Binding="{Binding   DeactivationDateTime}" Header="Deactivation Date/Time" ElementStyle="{StaticResource WrapText}" Width="*"></DataGridTextColumn>
+                            <DataGridTextColumn Binding="{Binding   AffectedCoverage}"  Header="Affected Coverage" ElementStyle="{StaticResource WrapText}" Width="*"></DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <!--</ScrollViewer>-->
+                </DockPanel>
+
+            </Grid>
+        </dxt:DXTabItem>
+    </dxt:DXTabControl>
+</Window>

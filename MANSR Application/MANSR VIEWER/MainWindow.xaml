@@ -1,0 +1,1040 @@
+﻿<Window 
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MANSR_VIEWER"
+        
+        xmlns:dxf="http://schemas.devexpress.com/winfx/2008/xaml/map"
+        xmlns:dxc="http://schemas.devexpress.com/winfx/2008/xaml/charts"
+        xmlns:dxt="http://schemas.devexpress.com/winfx/2008/xaml/core"
+        
+        xmlns:dxprg="http://schemas.devexpress.com/winfx/2008/xaml/propertygrid" xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" x:Class="MANSR_VIEWER.MainWindow"
+        Icon="./Telecomm.ico"
+        mc:Ignorable="d"
+        dxt:ThemeManager.ThemeName="Office2013LightGray"
+        Title="Mobile Access Network Viewer" Height="730" Width="1007" MinHeight="730" MinWidth="1007" SnapsToDevicePixels="True">
+
+    <Window.Resources>
+        <DataTemplate x:Key="CustomPushpin1">
+            <StackPanel ToolTipService.ToolTip="{Binding Path=MapItem.Information}" >
+                <Canvas Width="1" Height="5" Panel.ZIndex="1">
+                    <Border Height="Auto" Width="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                BorderBrush="White" Background="{Binding Path=MapItem.TextBrush}" CornerRadius="3,3,3,3">
+                        <TextBlock x:Name="L1" Text="{Binding Path=MapItem.Text}" Foreground="White"  FontFamily="Arial" FontSize="15" 
+                                       FontWeight="Bold" FontStyle="Normal" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </Canvas>
+            </StackPanel>
+        </DataTemplate>
+
+        <Style TargetType="{x:Type Control}" x:Key="DatePickerTextBoxStyle">
+            <!--<Setter Property="BorderThickness" Value="0"/>-->
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontFamily" Value="Sergoe UI"/>
+            <!--<Setter Property="HorizontalAlignment" Value="Center"/>-->
+            <!--<Setter Property="Background" Value="{x:Null}"/>-->
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+
+        <Style TargetType="{x:Type DatePickerTextBox}" >
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <TextBox x:Name="PART_TextBox"
+                             Text="{Binding Path=SelectedDate, StringFormat='d MMM yyyy', RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}}" Style="{StaticResource DatePickerTextBoxStyle}" >
+                        </TextBox>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+
+    <dxt:DXTabControl x:Name="tabControl"  HorizontalAlignment="Stretch" Height="Auto" VerticalAlignment="Stretch" Width="Auto" Grid.ColumnSpan="3">
+        <dxt:DXTabItem x:Name="OverviewTabItem" Header="Overview"  Foreground="#FF0C014F" FontWeight="Bold" Height="23" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Grid x:Name="GridOverviewItem" Height="Auto" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#FFBFBFBF">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Row="0"  Margin="20" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <DatePicker x:Name="dateTime_Overview" Width="128" CalendarClosed="ChangeAllCalendarDates"/>
+                    <Button x:Name="general_PickAndShowDate_button" Click="_General_PickAndShowDate_button_Click" Content="Load Data" Padding ="2" />
+
+                </StackPanel>
+                <DockPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="50">
+                    <StackPanel Orientation="Vertical">
+
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+                            <Border Height="Auto" Width="386"  
+                                ClipToBounds="True" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                                BorderThickness="1.5" BorderBrush="#FF0C014F"
+                                    Margin="0.5"
+                                    >
+                                <TextBlock x:Name="L634" Text="Technology" FontFamily="Arial" FontSize="22.5" FontWeight="Bold" FontStyle="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF0C014F"/>
+                            </Border>
+                            <Border Height="Auto" Width="100"  
+                                ClipToBounds="True" HorizontalAlignment="Center" VerticalAlignment="Top"
+                                BorderThickness="1.5" BorderBrush="#FF0C014F"
+                                Margin="0.5"
+                                    >
+                                <TextBlock x:Name="L235" Text="2G" FontFamily="Arial" FontSize="22.5" FontWeight="Bold" FontStyle="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF0C014F"/>
+
+                            </Border>
+                            <Border Height="Auto" Width="100"  
+                                ClipToBounds="True" HorizontalAlignment="Center" VerticalAlignment="Top"
+                                BorderThickness="1.5" BorderBrush="#FF0C014F"
+                                Margin="0.5"
+                                    >
+                                <TextBlock x:Name="L236" Text="3G" FontFamily="Arial" FontSize="22.5" FontWeight="Bold" FontStyle="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF0C014F"/>
+                            </Border>
+                            <Border Height="Auto" Width="100"  
+                                ClipToBounds="True" HorizontalAlignment="Center" VerticalAlignment="Top"
+                                BorderThickness="1.5" BorderBrush="#FF0C014F"
+                                Margin="0.5"
+                                    >
+                                <TextBlock x:Name="L237" Text="4G" FontFamily="Arial" FontSize="22.5" FontWeight="Bold" FontStyle="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF0C014F"/>
+                            </Border>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+                            <Border Height="26" Width="386"  
+                                ClipToBounds="True" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                                BorderThickness="1.5" BorderBrush="#FF0C014F"
+                                Margin="0.5"
+                                    >
+                                <TextBlock x:Name="L238" Text="Total Number of Sites" FontFamily="Arial" FontSize="22.5" FontWeight="Bold" FontStyle="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#0052cc"/>
+                            </Border>
+                            <Border Height="26" Width="100"  
+                                ClipToBounds="True" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                BorderThickness="1.5" BorderBrush="#FF0C014F"
+                                Margin="0.5"
+                                    >
+                                <TextBlock x:Name="t2gs" FontFamily="Arial" FontSize="22.5" FontWeight="Bold" FontStyle="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#0052cc"/>
+                            </Border>
+                            <Border Height="26" Width="100"  
+                                ClipToBounds="True" HorizontalAlignment="Center" VerticalAlignment="Top"
+                                BorderThickness="1.5" BorderBrush="#FF0C014F"
+                                    Margin="0.5"
+                                    >
+                                <TextBlock x:Name="t3gs" FontFamily="Arial" FontSize="22.5" FontWeight="Bold" FontStyle="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#0052cc"/>
+                            </Border>
+                            <Border Height="26" Width="100"  
+                                ClipToBounds="True" HorizontalAlignment="Center" VerticalAlignment="Top"
+                                BorderThickness="1.5" BorderBrush="#FF0C014F"
+                                    Margin="0.5"
+                                    >
+                                <TextBlock x:Name="t4gs" FontFamily="Arial" FontSize="22.5" FontWeight="Bold" FontStyle="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#0052cc"/>
+                            </Border>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+                            <Border Height="26" Width="386"  
+                                ClipToBounds="True" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                                BorderThickness="1.5" BorderBrush="#FF0C014F"
+                                    Margin="0.5"
+                                    >
+                                <TextBlock x:Name="L239" Text="Total Number of Unavailable Sites" FontFamily="Arial" FontSize="22.5" FontWeight="Bold" FontStyle="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF0C014F"/>
+                            </Border>
+                            <Border Height="26" Width="100"  
+                                ClipToBounds="True" HorizontalAlignment="Center" VerticalAlignment="Top"
+                                BorderThickness="1.5" BorderBrush="#FF0C014F"
+                                    Margin="0.5"
+                                    >
+                                <TextBlock x:Name="u2gs" FontFamily="Arial" FontSize="22.5" FontWeight="Bold" FontStyle="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF0C014F"/>
+                            </Border>
+                            <Border Height="26" Width="100"  
+                                ClipToBounds="True" HorizontalAlignment="Center" VerticalAlignment="Top"
+                                BorderThickness="1.5" BorderBrush="#FF0C014F"
+                                    Margin="0.5"
+                                    >
+                                <TextBlock x:Name="u3gs" FontFamily="Arial" FontSize="22.5" FontWeight="Bold" FontStyle="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF0C014F"/>
+                            </Border>
+                            <Border Height="26" Width="100"  
+                                ClipToBounds="True" HorizontalAlignment="Center" VerticalAlignment="Top"
+                                BorderThickness="1.5" BorderBrush="#FF0C014F"
+                                    Margin="0.5"
+                                    >
+                                <TextBlock x:Name="u4gs" FontFamily="Arial" FontSize="22.5" FontWeight="Bold" FontStyle="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF0C014F"/>
+                            </Border>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+                            <Border Height="26" Width="386"  
+                                ClipToBounds="True" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                                BorderThickness="1.5" BorderBrush="#FF0C014F"
+                                    Margin="0.5"
+                                    >
+                                <TextBlock x:Name="L240" Text="Percentage of Unavailable Sites" FontFamily="Arial" FontSize="22.5" FontWeight="Bold" FontStyle="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#0052cc"/>
+                            </Border>
+                            <Border Height="26" Width="100"  
+                                ClipToBounds="True" HorizontalAlignment="Center" VerticalAlignment="Top"
+                                BorderThickness="1.5" BorderBrush="#FF0C014F"
+                                    Margin="0.5"
+                                    >
+                                <TextBlock x:Name="a2Gp" FontFamily="Arial" FontSize="22.5" FontWeight="Bold" FontStyle="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#0052cc"/>
+                            </Border>
+                            <Border Height="26" Width="100"  
+                                ClipToBounds="True" HorizontalAlignment="Center" VerticalAlignment="Top"
+                                BorderThickness="1.5" BorderBrush="#FF0C014F"
+                                    Margin="0.5"
+                                    >
+                                <TextBlock x:Name="a3Gp" FontFamily="Arial" FontSize="22.5" FontWeight="Bold" FontStyle="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#0052cc"/>
+                            </Border>
+                            <Border Height="26" Width="100"  
+                                ClipToBounds="True" HorizontalAlignment="Center" VerticalAlignment="Top"
+                                BorderThickness="1.5" BorderBrush="#FF0C014F"
+                                    Margin="0.5"
+                                    >
+                                <TextBlock x:Name="a4Gp" FontFamily="Arial" FontSize="22.5" FontWeight="Bold" FontStyle="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#0052cc"/>
+                            </Border>
+                        </StackPanel>
+                    </StackPanel>
+                </DockPanel>
+                <!--<StackPanel Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Label x:Name="label1" Margin="2.5" Content="Total 2G Sites" HorizontalAlignment="Center" Panel.ZIndex="5" Foreground="#FF0C014F" FontFamily="Calibri" FontSize="19" FontStyle="Normal" FontWeight="Bold"/>
+                    <TextBox x:Name="t2gs" Margin="2.5" IsReadOnly="True" IsEnabled="True" TextAlignment="Center" Panel.ZIndex="5"  Foreground="#FF0C014F" Background="#FFE4E4E4" FontFamily="Calibri" FontSize="16" FontWeight="Black" Height="23" TextWrapping="Wrap" Text="N/A" Width="110"/>
+                    <Label x:Name="label4" Margin="2.5" Content="Unavailable 2G Sites" HorizontalAlignment="Center" Panel.ZIndex="5" Foreground="#FF0C014F" FontFamily="Calibri" FontSize="19" FontStyle="Normal" FontWeight="Bold" Width="Auto" />
+                    <TextBox x:Name="u2gs" Margin="2.5" IsReadOnly="True" IsEnabled="True" Panel.ZIndex="5" TextAlignment="Center" Foreground="#FF0C014F" FontFamily="Calibri" FontSize="16" FontWeight="Black" Height="23" TextWrapping="Wrap" Text="N/A" Width="110" Background="#FFE4E4E4"/>
+                    <Label x:Name="label9" Margin="2.5" Content="Unavailable 2G (%)" HorizontalAlignment="Center" Panel.ZIndex="5" Foreground="#FF0C014F" FontFamily="Calibri" FontSize="19" FontStyle="Normal" FontWeight="Bold"/>
+                    <TextBox x:Name="a2Gp" Margin="2.5" IsReadOnly="True"  IsEnabled="True" Panel.ZIndex="5" TextAlignment="Center" Foreground="#FF0C014F" FontFamily="Calibri" FontSize="16" FontWeight="Black" Height="23" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="110" Background="#FFE4E4E4"/>
+                </StackPanel>-->
+                <StackPanel Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="3">
+                    <Border Height="Auto" Width="Auto" Panel.ZIndex="1" HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch" Background="#00001A" BorderThickness="1" BorderBrush="Gray"
+                            Margin="0">
+                        <StackPanel  Orientation="Vertical" Margin="10">
+                            <TextBlock x:Name="L132" Margin="1.5" Text="Categories" FontFamily="Arial" FontSize="22.5" FontWeight="Bold" FontStyle="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#E0E0E0"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Border Panel.ZIndex="1" Height="15" Width="15" HorizontalAlignment="Center"
+                                 VerticalAlignment="Center" Background="#4F81BD" 
+                                Margin="15">
+                                </Border>
+                                <TextBlock x:Name="L133" Margin="12" Text="Operational" FontFamily="Arial" FontSize="19" FontWeight="Bold" FontStyle="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#E0E0E0"/>
+                                <Border Panel.ZIndex="1" Height="15" Width="15" HorizontalAlignment="Center"
+                                 VerticalAlignment="Center" Background="#C0504D" 
+                                Margin="15">
+                                </Border>
+                                <TextBlock x:Name="L134" Margin="12" Text="Retention / Deployment" FontFamily="Arial" FontSize="19" FontWeight="Bold" FontStyle="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#E0E0E0"/>
+                                <Border Panel.ZIndex="1" Height="15" Width="15" HorizontalAlignment="Center"
+                                 VerticalAlignment="Center" Background="#9BBB59" 
+                                Margin="15">
+                                </Border>
+                                <TextBlock x:Name="L135" Margin="12" Text="Licensing" FontFamily="Arial" FontSize="19" FontWeight="Bold" FontStyle="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#E0E0E0"/>
+                                <Border Panel.ZIndex="1" Height="15" Width="15" HorizontalAlignment="Center"
+                                 VerticalAlignment="Center" 
+                                 Background="#8064A2"
+                                 Margin="15">
+                                    <!--Background="#594671" -->
+
+                                </Border>
+                                <TextBlock x:Name="L136" Margin="12" Text="Deactivated" FontFamily="Arial" FontSize="19" FontWeight="Bold" FontStyle="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#E0E0E0"/>
+                            </StackPanel>
+                        </StackPanel>
+
+
+                    </Border>
+                </StackPanel>
+
+                <DockPanel Grid.Row="3" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <dxc:ChartControl x:Name="Reason2GUnavSites" Panel.ZIndex="1"
+                                      HorizontalAlignment="Left"
+                                      VerticalAlignment="Bottom"
+                                      Width="Auto"
+                                      Height="Auto"
+                                      Background="#00001A" BoundDataChanged="pieChart_BoundDataChanged"
+                                      Padding="0"
+                                      >
+                        <dxc:ChartControl.Titles>
+                            <dxc:Title Foreground="#E0E0E0" Content="2G Unavailable Sites" HorizontalAlignment="Center"/>
+                        </dxc:ChartControl.Titles>
+                        <dxc:SimpleDiagram3D ZoomPercent="120">
+                            <dxc:SimpleDiagram3D.Background>
+                                <ImageBrush/>
+                            </dxc:SimpleDiagram3D.Background>
+                            <dxc:PieSeries3D x:Name="pieSeries2GUnavailableSites" DataSource="{Binding}"  LabelsVisibility="True"  
+                                             ArgumentDataMember="Key" ValueDataMember="Value" LegendTextPattern="{}{A} : {V}" 
+                                             ToolTipEnabled="True" HoleRadiusPercent="0" ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                             DepthTransform="0.3"
+                                             >
+
+                                <dxc:PieSeries3D.Label>
+                                    <dxc:SeriesLabel Visibility="Visible" dxc:PieSeries.LabelPosition="Inside"
+                                                     RenderMode="RectangleConnectedToCenter"
+                                                     TextPattern="{}{V} ({VP:P2})"
+                                                     FontSize="15"
+                                                     FontFamily="Arial" 
+                                                     FontWeight="Bold" 
+                                                     FontStyle="Normal"
+                                                     Foreground="White"
+                                                     Background="Transparent"
+                                                     Opacity="0"
+                                                     >
+                                    </dxc:SeriesLabel>
+                                </dxc:PieSeries3D.Label>
+                            </dxc:PieSeries3D>
+                        </dxc:SimpleDiagram3D>
+
+                    </dxc:ChartControl>
+                </DockPanel>
+                <StackPanel Grid.Row="4" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Button x:Name="captureScreenshot_button" Margin="10" Content="Export Screenshot" FontSize="15" HorizontalAlignment="Left" Height="Auto" Width="Auto" Click="_X_Chart_Export_button_Click"/>
+                </StackPanel>
+                <StackPanel Grid.Row="4" Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal">
+                    <Button x:Name="Reason2GUnavSites_button" Content="Export 2G" Click="_X_Chart_Export_button_Click"  BorderThickness="2" BorderBrush="#FF0C014F" Foreground="#FF0C014F" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top" Width="79" RenderTransformOrigin="0.532,-0.36" Grid.Column="1"/>
+                    <Button x:Name="Reason3GUnavSites_button" Content="Export 3G" Click="_X_Chart_Export_button_Click"  BorderThickness="2" BorderBrush="#FF0C014F" Foreground="#FF0C014F" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top" Width="79" Grid.Column="1"/>
+                    <Button x:Name="Reason4GUnavSites_button" Content="Export 4G" Click="_X_Chart_Export_button_Click"  BorderThickness="2" BorderBrush="#FF0C014F" Foreground="#FF0C014F" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top" Width="79" Grid.Column="1"/>
+                    <Image Source="Images/Wind_Logo.png" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.ColumnSpan="4">
+                    <Label x:Name="label" Grid.ColumnSpan="2" Content="Mobile Access Network Status Report" Panel.ZIndex="5" Foreground="#FF0C014F" FontFamily="Calibri" FontSize="38" FontStyle="Normal" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto"/>
+                </StackPanel>
+                <!--<StackPanel Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Label x:Name="label2" Margin="2.5" Content="Total 3G Sites" HorizontalAlignment="Center" Panel.ZIndex="5" Foreground="#FF0C014F" FontFamily="Calibri" FontSize="19" FontStyle="Normal" FontWeight="Bold"/>
+                    <TextBox x:Name="t3gs" Margin="2.5" IsReadOnly="True" IsEnabled="True" TextAlignment="Center" Panel.ZIndex="5" Foreground="#FF0C014F" FontFamily="Calibri" FontSize="16" FontWeight="Black" Height="23" TextWrapping="Wrap" Text="N/A" Width="110" Background="#FFE4E4E4"/>
+                    <Label x:Name="label5" Margin="2.5" Content="Unavailable 3G Sites" HorizontalAlignment="Center" Panel.ZIndex="5" Foreground="#FF0C014F" FontFamily="Calibri" FontSize="19" FontStyle="Normal" FontWeight="Bold" VerticalAlignment="Top"/>
+                    <TextBox x:Name="u3gs" Margin="2.5" IsReadOnly="True" IsEnabled="True" Panel.ZIndex="5" TextAlignment="Center" Foreground="#FF0C014F" FontFamily="Calibri" FontSize="16" FontWeight="Black" Height="23" TextWrapping="Wrap" Text="N/A" Width="110" Background="#FFE4E4E4"/>
+                    <Label x:Name="label10" Margin="2.5" Content="Unavailable 3G (%)" HorizontalAlignment="Center" Panel.ZIndex="5"  Foreground="#FF0C014F" FontFamily="Calibri" FontSize="19" FontStyle="Normal" FontWeight="Bold" />
+                    <TextBox x:Name="a3Gp" Margin="2.5" IsReadOnly="True"  IsEnabled="True" Panel.ZIndex="5" TextAlignment="Center" Foreground="#FF0C014F" FontFamily="Calibri" FontSize="16" FontWeight="Black" Height="23" TextWrapping="Wrap" Text="N/A" Width="110" Background="#FFE4E4E4"/>
+                </StackPanel>-->
+                <DockPanel Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <dxc:ChartControl x:Name="Reason3GUnavSites" Padding="0" Panel.ZIndex="1" VerticalAlignment="Center" Width="Auto" Height="Auto" Background="#00001A" BoundDataChanged="pieChart_BoundDataChanged">
+                        <dxc:ChartControl.Titles>
+                            <dxc:Title Foreground="#E0E0E0" Content="3G Unavailable Sites" HorizontalAlignment="Center"/>
+                        </dxc:ChartControl.Titles>
+                        <dxc:SimpleDiagram3D ZoomPercent="120">
+                            <dxc:PieSeries3D DataSource="{Binding}" ArgumentDataMember="Key" LabelsVisibility="True" 
+                                             ValueDataMember="Value" LegendTextPattern="{}{A} : {V}" 
+                                             ToolTipEnabled="True" HoleRadiusPercent="0"
+                                             DepthTransform="0.3"
+                                             >
+                                <dxc:PieSeries3D.Label>
+                                    <dxc:SeriesLabel Visibility="Visible" dxc:PieSeries.LabelPosition="Inside"
+                                                     RenderMode="RectangleConnectedToCenter"
+                                                     TextPattern="{}{V} ({VP:P2})"
+                                                     FontSize="15"
+                                                     FontFamily="Arial" 
+                                                     FontWeight="Bold" 
+                                                     FontStyle="Normal"
+                                                     Foreground="White"
+                                                     Background="Transparent"
+                                                     Opacity="0"
+                                                     />
+                                </dxc:PieSeries3D.Label>
+                            </dxc:PieSeries3D>
+                        </dxc:SimpleDiagram3D>
+                    </dxc:ChartControl>
+                </DockPanel>
+                <!--<StackPanel Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Label x:Name="label3" Margin="2.5" Content="Total 4G Sites" HorizontalAlignment="Center" Panel.ZIndex="5" Foreground="#FF0C054F" FontFamily="Calibri" FontSize="19" FontStyle="Normal" FontWeight="Bold" VerticalAlignment="Top" BorderThickness="0"/>
+                    <TextBox x:Name="t4gs" Margin="2.5" IsReadOnly="True" IsEnabled="True" TextAlignment="Center" Panel.ZIndex="5" Foreground="#FF0C014F" FontFamily="Calibri" FontSize="16" FontWeight="Black" Height="23" TextWrapping="Wrap" Text="N/A" Width="110" Background="#FFE4E4E4"/>
+                    <Label x:Name="label6" Margin="2.5" Content="Unavailable 4G Sites" HorizontalAlignment="Center" Panel.ZIndex="5" Foreground="#FF0C014F" FontFamily="Calibri" FontSize="19" FontStyle="Normal" FontWeight="Bold"/>
+                    <TextBox x:Name="u4gs" Margin="2.5" IsReadOnly="True" IsEnabled="True" Panel.ZIndex="5" TextAlignment="Center" Foreground="#FF0C014F" FontFamily="Calibri" FontSize="16" FontWeight="Black" Height="23" TextWrapping="Wrap" Text="N/A" Width="110" Background="#FFE4E4E4"/>
+                    <Label x:Name="label11" Margin="2.5" Content="Unavailable 4G (%)" HorizontalAlignment="Center" Panel.ZIndex="5"  Foreground="#FF0C014F" FontFamily="Calibri" FontSize="19" FontStyle="Normal" FontWeight="Bold" VerticalAlignment="Top"/>
+                    <TextBox x:Name="a4Gp" Margin="2.5" IsReadOnly="True"  IsEnabled="True" Panel.ZIndex="5" TextAlignment="Center" Foreground="#FF0C014F" FontFamily="Calibri" FontSize="16" FontWeight="Black" Height="23" TextWrapping="Wrap" Text="N/A" Width="110" Background="#FFE4E4E4"/>
+                </StackPanel>-->
+                <DockPanel Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.ColumnSpan="4">
+                    <dxc:ChartControl x:Name="Reason4GUnavSites" Margin="0" Panel.ZIndex="5" VerticalAlignment="Center" Padding="0" Width="Auto" Height="Auto" Background="#00001A" BoundDataChanged="pieChart_BoundDataChanged">
+                        <dxc:ChartControl.Titles>
+                            <dxc:Title Foreground="#E0E0E0" Content="4G Unavailable Sites" HorizontalAlignment="Center"/>
+                        </dxc:ChartControl.Titles>
+                        <dxc:SimpleDiagram3D ZoomPercent="120">
+                            <dxc:PieSeries3D DataSource="{Binding}" LabelsVisibility="True" 
+                                             ArgumentDataMember="Key" ValueDataMember="Value" 
+                                             LegendTextPattern="{}{A} : {V}" 
+                                             ToolTipEnabled="True" 
+                                             HoleRadiusPercent="0"
+                                             DepthTransform="0.3"
+                                             MinWidth="200"
+                                             >
+                                <dxc:PieSeries3D.Label>
+                                    <dxc:SeriesLabel Visibility="Visible" dxc:PieSeries.LabelPosition="Inside"
+                                                     RenderMode="RectangleConnectedToCenter"
+                                                     TextPattern="{}{V} ({VP:P2})"
+                                                     FontSize="15"
+                                                     FontFamily="Arial" 
+                                                     FontWeight="Bold" 
+                                                     FontStyle="Normal"
+                                                     Foreground="White"
+                                                     Background="Transparent"
+                                                     Opacity="0"
+                                                     ResolveOverlappingMode="JustifyAllAroundPoint"
+                                                     />
+                                </dxc:PieSeries3D.Label>
+                            </dxc:PieSeries3D>
+                        </dxc:SimpleDiagram3D>
+                    </dxc:ChartControl>
+                </DockPanel>
+            </Grid>
+        </dxt:DXTabItem>
+        <dxt:DXTabItem Header="Map View" Foreground="#FF0C014F" FontWeight="Bold" Height="23" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Grid Height="Auto" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <dxf:MapControl x:Name="myMap" Grid.ColumnSpan="3" Grid.RowSpan="3" Panel.ZIndex="1" CenterPoint="38.323911,26.058537" ZoomLevel="6"  BorderThickness="3" MouseLeftButtonDown="myMap_MouseLeftButtonDown" MouseRightButtonDown="_MyMap_MouseRightButtonDown">
+                    <dxf:ImageTilesLayer >
+                        <dxf:OpenStreetMapDataProvider TileUriTemplate="http://{subdomain}.tile.openstreetmap.org/{tileLevel}/{tileX}/{tileY}.png" Kind="Transport"/>
+                    </dxf:ImageTilesLayer>
+                    <dxf:VectorLayer Margin="0,10,0,-10">
+                        <dxf:MapItemStorage x:Name="pinsLayer"/>
+                    </dxf:VectorLayer>
+                </dxf:MapControl>
+
+                <StackPanel Grid.Row="0" Grid.Column="0" Panel.ZIndex="1" ClipToBounds="True" Grid.ColumnSpan="3" Grid.RowSpan="3" HorizontalAlignment="Right" VerticalAlignment="Top" Orientation="Vertical">
+                    <Border Height="26" Width="776" Background="#FF0C014F"  ClipToBounds="True" HorizontalAlignment="Right" VerticalAlignment="Top" BorderThickness="3" BorderBrush="#FF0C014F">
+                        <Canvas  x:Name="Pref_Area_Canvas4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ClipToBounds="True" Panel.ZIndex="1"  Height="Auto"  Width="Auto">
+                            <StackPanel Panel.ZIndex="2" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Horizontal">
+                                <Rectangle Name="RectanglePrefArea" Width="20" Height="20" Fill="#FFE2D80A" Stroke="White" MouseLeftButtonDown="Prefecture_Rectangle_MouseLeftButtonDown"/>
+                                <Border Height="20" Width="134" Background="#FF0C014F" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="1.5" BorderBrush="White" MouseLeftButtonDown="Prefecture_Rectangle_MouseLeftButtonDown">
+                                    <TextBlock x:Name="PrefectureAreaLegendText" Text="Prefecture/Area " FontFamily="Arial" FontSize="17" FontWeight="Bold" FontStyle="Oblique" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
+                                </Border>
+                                <Rectangle Width="20" Height="20" Fill="#FF2C7FB8" Stroke="White" MouseDown="Operational_Rectangle_MouseLeftButtonDown"/>
+                                <Border Height="20" Padding="0.5" Width="Auto" Background="#FF0C014F"  HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="1.5" BorderBrush="White">
+                                    <TextBlock x:Name="OperationalLegendText" Text="Operational " FontFamily="Arial" FontSize="17" FontWeight="Bold" FontStyle="Oblique" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" MouseDown="Operational_Rectangle_MouseLeftButtonDown" />
+                                </Border>
+                                <Rectangle Width="20" Height="20" Fill="#FFE0533A" Stroke="White" MouseDown="Retention_Rectangle_MouseLeftButtonDown"/>
+                                <Border Height="20" Width="Auto" Padding="0.5" Background="#FF0C014F"  HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="1.5" BorderBrush="White">
+                                    <TextBlock x:Name="RetentionLegendText" Text="Retention " FontFamily="Arial" FontSize="17" FontWeight="Bold" FontStyle="Oblique" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" MouseDown="Retention_Rectangle_MouseLeftButtonDown"/>
+                                </Border>
+                                <Rectangle Width="20" Height="20" Fill="#FF718B26" Stroke="White" MouseDown="Licensing_Rectangle_MouseLeftButtonDown"/>
+                                <Border Height="20" Width="Auto" Padding="0.5" Background="#FF0C014F"  HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="1.5" BorderBrush="White" MouseDown="Licensing_Rectangle_MouseLeftButtonDown">
+                                    <TextBlock x:Name="LicensingLegendText" Text="Licensing " FontFamily="Arial" FontSize="17" FontWeight="Bold" FontStyle="Oblique" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
+                                </Border>
+                                <Rectangle Width="20" Height="20" Fill="#8064A2" Stroke="White" MouseDown="Deactivated_Rectangle_MouseLeftButtonDown"/>
+                                <Border Height="20" Width="Auto" Padding="0.5" Background="#FF0C014F"  HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="1.5" BorderBrush="White">
+                                    <TextBlock x:Name="DeactivatedLegendText" Text="Deactivated " FontFamily="Arial" FontSize="17" FontWeight="Bold" FontStyle="Oblique" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" MouseDown="Deactivated_Rectangle_MouseLeftButtonDown"/>
+                                </Border>
+                                <Rectangle Width="20" Height="20" Fill="#FF5DBCD2" Stroke="White" MouseDown="_2G_Rectangle_MouseLeftButtonDown"/>
+                                <Border Height="20" Width="Auto" Padding="0.5" Background="#FF0C014F"  HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="1.5" BorderBrush="White">
+                                    <TextBlock x:Name="TwoGLegendText" Text="2G " FontFamily="Arial" FontSize="17" FontWeight="Bold" FontStyle="Oblique" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" MouseDown="_2G_Rectangle_MouseLeftButtonDown"/>
+                                </Border>
+                                <Rectangle Width="20" Height="20" Fill="#FFFFC000" Stroke="White" MouseDown="_3G_Rectangle_MouseLeftButtonDown"/>
+                                <Border Height="20" Width="Auto" Padding="0.5" Background="#FF0C014F"  HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="1.5" BorderBrush="White">
+                                    <TextBlock x:Name="ThreeGLegendText" Text="3G " FontFamily="Arial" FontSize="17" FontWeight="Bold" FontStyle="Oblique" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" MouseDown="_3G_Rectangle_MouseLeftButtonDown"/>
+                                </Border>
+                                <Rectangle Width="20" Height="20" Fill="#FF9900CD" Stroke="White" MouseDown="_4G_Rectangle_MouseLeftButtonDown"/>
+                                <Border Height="20" Width="Auto" Padding="0.5" Background="#FF0C014F"  HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="1.5" BorderBrush="White">
+                                    <TextBlock x:Name="FourGLegendText" Text="4G " FontFamily="Arial" FontSize="17" FontWeight="Bold" FontStyle="Oblique" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" MouseDown="_4G_Rectangle_MouseLeftButtonDown"/>
+                                </Border>
+
+                            </StackPanel>
+                        </Canvas>
+                    </Border>
+                    <DataGrid x:Name="dataGrid_overall" Margin="1" Panel.ZIndex="1" IsHitTestVisible="False" HorizontalAlignment="Right" Height="Auto" 
+                                  IsReadOnly="True" Foreground="White" VerticalAlignment="Top" Width="322" BorderThickness="3" BorderBrush="#FF0C014F" 
+                                  Background="LightGray" FontStyle="Oblique" FontFamily="Arial" FontSize="10" HorizontalScrollBarVisibility="Disabled" 
+                                  HeadersVisibility="None"/>
+                    <DataGrid x:Name="dataGrid_specific" Margin="1" IsHitTestVisible="False" HorizontalAlignment="Right" Height="Auto" IsReadOnly="True" 
+                                  VerticalAlignment="Top" Width="322" BorderThickness="3" BorderBrush="#FF0C014F" Background="LightGray" 
+                                  FontStyle="Oblique" FontFamily="Arial" FontSize="10" Canvas.Top="6" HorizontalScrollBarVisibility="Disabled"  
+                                  HeadersVisibility="None" VerticalScrollBarVisibility="Disabled" Canvas.Left="10" >
+                        <DataGrid.Columns>
+                            <DataGridTextColumn >
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style>
+                                        <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                        <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" Grid.Column="0" Margin="10" Panel.ZIndex="1" HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Vertical">
+                    <DatePicker x:Name="datetime_MapView" Margin="2.5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="128" BorderThickness="2" TabIndex="4" CalendarClosed="ChangeAllCalendarDates">
+                        <DatePicker.BorderBrush>
+                            <LinearGradientBrush EndPoint="0.5,0" StartPoint="0.5,1">
+                                <GradientStop Color="#FFA3AEB9" Offset="0"/>
+                                <GradientStop Color="#FF8399A9" Offset="0.375"/>
+                                <GradientStop Color="#FF718597" Offset="0.375"/>
+                                <GradientStop Color="#FFB9B9B9" Offset="1"/>
+                            </LinearGradientBrush>
+                        </DatePicker.BorderBrush>
+                    </DatePicker>
+                    <StackPanel Panel.ZIndex="1" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal">
+                        <ComboBox x:Name="comboBox_Perf_Area_Sites" Margin="2.5" FontSize="15" 
+                                  Panel.ZIndex="1"  HorizontalAlignment="Left" Height="Auto" 
+                                  VerticalAlignment="Center" Width="155" TabIndex="1" 
+                                  SelectionChanged="comboBox_Perf_Area_Sites_SelectionChanged">
+                            <ComboBoxItem IsSelected="True" Content="Prefectures/Areas"/>
+                            <ComboBoxItem Content="Sites"/>
+                        </ComboBox>
+                        <Ellipse x:Name="Pref_Area_Circle" Fill="Gray" HorizontalAlignment="Right" VerticalAlignment="Center" Height="19" Width="19" Stroke="White" StrokeThickness="2"/>
+                    </StackPanel>
+                    <StackPanel Panel.ZIndex="1" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal">
+                        <ComboBox x:Name="comboBox_map_technology"  Margin="2.5" Panel.ZIndex="1" FontSize="15" 
+                                  HorizontalAlignment="Left" Height="Auto" VerticalAlignment="Center" Width="155"
+                                  TabIndex="2" DropDownClosed="comboBox_map_technology_DropDownClosed" SelectionChanged="comboBox_map_technology_SelectionChanged">
+                        <ComboBoxItem IsSelected="True" Content="2G/3G/4G"/>
+                            <!--<ComboBoxItem Content="2G."/>
+                            <ComboBoxItem Content="3G."/>
+                            <ComboBoxItem Content="4G."/>-->
+                        </ComboBox>
+                        <Ellipse x:Name="Technology_Circle" Fill="Gray" HorizontalAlignment="Right" VerticalAlignment="Center" Height="19" Width="19" Stroke="White" StrokeThickness="2"/>
+                    </StackPanel>
+                    <StackPanel Panel.ZIndex="1" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal">
+                        <ComboBox x:Name="comboBox_map_reason" Margin="2.5" Panel.ZIndex="1" FontSize="15"
+                                  HorizontalAlignment="Left" Height="Auto" VerticalAlignment="Top" Width="112" FontStyle="Normal"
+                                  TabIndex="3" DropDownClosed="comboBox_map_reason_DropDownClosed" SelectionChanged="comboBox_map_reason_SelectionChanged">
+                            <ComboBoxItem IsSelected="True" Content="Show all"/>
+                            <!--<ComboBoxItem Content="Operational"/>
+                            <ComboBoxItem Content="Retention"/>
+                            <ComboBoxItem Content="Licensing"/>-->
+                        </ComboBox>
+                        <StackPanel Panel.ZIndex="1" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal">
+                            <Ellipse x:Name="Reason_Circle" Fill="Gray" HorizontalAlignment="Left" Height="19" Width="19" Stroke="White" StrokeThickness="2"/>
+                            <Ellipse x:Name="Reason_Circle_2" Fill="Gray" HorizontalAlignment="Left" Height="19" Width="19" Stroke="White" StrokeThickness="2"/>
+                            <Ellipse x:Name="Reason_Circle_3" Fill="Gray" HorizontalAlignment="Left" Height="19" Width="19" Stroke="White" StrokeThickness="2"/>
+                            <Ellipse x:Name="Reason_Circle_4" Fill="Gray" HorizontalAlignment="Left" Height="19" Width="19" Stroke="White" StrokeThickness="2"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Panel.ZIndex="1" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal">
+                        <Border x:Name="borderDeactivated" Margin="2.5" Height="Auto" Width="113" Background="#FFFFFF"  HorizontalAlignment="Left" 
+                            VerticalAlignment="Center" BorderThickness="1.0" BorderBrush="LightGray"
+                            Panel.ZIndex="1">
+                            <CheckBox x:Name="checkBoxDeactivated" Panel.ZIndex="1" BorderThickness="10" FlowDirection="RightToLeft"   
+                                  FontSize="15" IsChecked="False" HorizontalAlignment="Left"   
+                                  Height="Auto" VerticalAlignment="Center" Width="Auto" Click="checkBoxDeactivated_Click"
+                              BorderBrush="Black" 
+                               >
+                                <TextBlock FontSize="15" Panel.ZIndex="1" FontStyle="Normal" Margin="3,-2,3,0">Deactivated</TextBlock>
+                            </CheckBox>
+                        </Border>
+                        <Ellipse x:Name="Reason_Circle_5" Fill="Gray" HorizontalAlignment="Left" Height="19" Width="19" Stroke="White" StrokeThickness="2"/>
+                    </StackPanel>
+                    <Border x:Name="borderDuration" Margin="2.5" Height="Auto" Width="92" Background="#FFFFFF"  HorizontalAlignment="Left" 
+                            VerticalAlignment="Center" BorderThickness="1.0" BorderBrush="LightGray"
+                            Panel.ZIndex="1">
+                        <CheckBox x:Name="checkBoxDuration" Panel.ZIndex="1" BorderThickness="10" FlowDirection="RightToLeft"   
+                                  FontSize="15" IsChecked="False" HorizontalAlignment="Left"   
+                                  Height="Auto" VerticalAlignment="Center" Width="Auto" Click="checkBoxDuration_Click"
+                              BorderBrush="Black">
+                            <TextBlock FontSize="15" Panel.ZIndex="1" FontStyle="Normal" Margin="3,-2,3,0">Duration</TextBlock>
+                        </CheckBox>
+                    </Border>
+                    <Button x:Name="mapview_show_button" Margin="2.5" Panel.ZIndex="1" Content="Show" HorizontalAlignment="Left" VerticalAlignment="Top" Width="57" BorderBrush="Black" BorderThickness="4"  TabIndex="5" Click="_Mapview_show_button_Click"/>
+                </StackPanel>
+                <!--<Canvas  x:Name="Pref_Area_Canvas" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" Panel.ZIndex="1"  Height="291" VerticalAlignment="Top" Width="270">
+                    <Ellipse x:Name="Pref_Area_Circle" Fill="Gray" HorizontalAlignment="Left" Height="19" Width="19" Canvas.Left="141" Canvas.Top="109" Stroke="White" StrokeThickness="2"/>
+                    <Ellipse x:Name="Technology_Circle" Fill="Gray" HorizontalAlignment="Left" Height="19" Width="19" Canvas.Left="93" Canvas.Top="132"  Stroke="White" StrokeThickness="2"/>
+                    <Ellipse x:Name="Reason_Circle" Fill="Gray" HorizontalAlignment="Left" Height="19" Width="19" Canvas.Left="93" Canvas.Top="157"  Stroke="White" StrokeThickness="2"/>
+                    <Ellipse x:Name="Reason_Circle_2" Fill="Gray" HorizontalAlignment="Left" Height="19" Width="19" Canvas.Left="114" Canvas.Top="157"  Stroke="White" StrokeThickness="2"/>
+                    <Ellipse x:Name="Reason_Circle_3" Fill="Gray" HorizontalAlignment="Left" Height="19" Width="19" Canvas.Left="135" Canvas.Top="157"  Stroke="White" StrokeThickness="2"/>
+                </Canvas>
+                -->
+
+                <!--<Canvas  x:Name="Pref_Area_Canvas4" Margin="2.5" HorizontalAlignment="Left" Panel.ZIndex="1"  Height="Auto" VerticalAlignment="Top" Width="Auto">
+                    <Image HorizontalAlignment="Left" Height="20" 
+                           Panel.ZIndex="4" VerticalAlignment="Top" 
+                           Width="20" Source="Images/Prefecture Color.png" Stretch="None" Margin="536,5,0,0"/>
+                    <Image HorizontalAlignment="Left" Height="20" 
+                           Panel.ZIndex="4" VerticalAlignment="Top" 
+                           Width="20" Source="Images/Operational_Color.png" Stretch="None" Margin="699,5,0,0"/>
+                    <Image HorizontalAlignment="Left" Height="20" 
+                           Panel.ZIndex="4" VerticalAlignment="Top" 
+                           Width="20" Source="Images/Retention_2_Color.png" Stretch="None" Margin="832,5,0,0"/>
+                    <Image HorizontalAlignment="Left" Height="20" 
+                           Panel.ZIndex="4" VerticalAlignment="Top" 
+                           Width="20" Source="Images/Licensing_Color.png" Stretch="None" Margin="948,5,0,0"/>
+                    <Image HorizontalAlignment="Left" Height="20" 
+                           Panel.ZIndex="4" VerticalAlignment="Top" 
+                           Width="20" Source="Images/2G_Color.png" Stretch="None" Margin="1064,5,0,0"/>
+                    <Image HorizontalAlignment="Left" Height="20" 
+                           Panel.ZIndex="4" VerticalAlignment="Top" 
+                           Width="20" Source="Images/3G_Color.png" Stretch="None" Margin="1121,5,0,0"/>
+                    <Image HorizontalAlignment="Left" Height="20" 
+                           Panel.ZIndex="4" VerticalAlignment="Top" 
+                           Width="20" Source="Images/4G_Color.png" Stretch="None" Margin="1178,5,0,0"/>
+                </Canvas>
+                -->
+            </Grid>
+        </dxt:DXTabItem>
+        <dxt:DXTabItem Header="Operational Analysis" Foreground="#FF0C014F" FontWeight="Bold" Height="23" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Grid x:Name="OperationalAnalysisGrid" Height="Auto" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <dxc:ChartControl x:Name="operational_analysis" Grid.ColumnSpan="3"  Grid.RowSpan="3" Foreground="#FF0C014F"  FontWeight="Bold" 
+IsTabStop="True" BorderBrush="#00000000" Background="#D3D3D3">
+                    <dxc:ChartControl.Titles>
+                        <dxc:Title x:Name="OperAnalysisTitle" Content="Analysis for Operational Issues" />
+                    </dxc:ChartControl.Titles>
+                    <dxc:ChartControl.Legend>
+                        <dxc:Legend ReverseItems="True" Orientation="Vertical"/>
+                    </dxc:ChartControl.Legend>
+                    <dxc:XYDiagram2D Rotated="True" TextOptions.TextFormattingMode="Ideal" HorizontalAlignment="Stretch" MouseLeftButtonUp="MenuItem_Operational_ShowDetails" >
+                        <dxc:XYDiagram2D.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem x:Name="showDetailsMenuItem_For_Oper_Analysis" Header="Show Details..." Click="MenuItem_Operational_ShowDetails" />
+                            </ContextMenu>
+                        </dxc:XYDiagram2D.ContextMenu>
+
+                        <dxc:BarSideBySideSeries2D x:Name="g2serieo"  DisplayName="2G" BarWidth="0.8" DataSource="{Binding}" ArgumentDataMember="Key" ValueDataMember="Value" Brush="#5DBCD2">
+                            <dxc:BarSideBySideSeries2D.Model>
+                                <dxc:FlatBar2DModel/>
+                            </dxc:BarSideBySideSeries2D.Model>
+                        </dxc:BarSideBySideSeries2D>
+                        <dxc:BarSideBySideSeries2D x:Name="g3serieo" DisplayName="3G" BarWidth="0.8" DataSource="{Binding}" ArgumentDataMember="Key" ValueDataMember="Value" Brush="#FFC000">
+                            <dxc:BarSideBySideSeries2D.Model>
+                                <dxc:FlatBar2DModel/>
+                            </dxc:BarSideBySideSeries2D.Model>
+                        </dxc:BarSideBySideSeries2D>
+                        <dxc:BarSideBySideSeries2D x:Name="g4serieo" DisplayName="4G" BarWidth="0.8" DataSource="{Binding}" ArgumentDataMember="Key" ValueDataMember="Value" Brush="#9900CD">
+                            <dxc:BarSideBySideSeries2D.Model>
+                                <dxc:FlatBar2DModel/>
+                            </dxc:BarSideBySideSeries2D.Model>
+                        </dxc:BarSideBySideSeries2D>
+                        <dxc:XYDiagram2D.AxisY>
+                            <dxc:AxisY2D>
+                                <dxc:AxisY2D.WholeRange>
+                                    <!--<dxc:Range Name="ax2" MinValue="{Binding}" MaxValue="{Binding}"/> -->
+                                    <dxc:Range Name="YAxisScaleOper" MinValue="{Binding}" MaxValue="{Binding}" SideMarginsValue="0"/>
+                                </dxc:AxisY2D.WholeRange>
+                                <dxc:AxisY2D.NumericScaleOptions>
+                                    <dxc:ContinuousNumericScaleOptions AutoGrid="False" GridSpacing="1"  />
+                                </dxc:AxisY2D.NumericScaleOptions>
+                            </dxc:AxisY2D>
+                        </dxc:XYDiagram2D.AxisY>
+                    </dxc:XYDiagram2D>
+                </dxc:ChartControl>
+
+                <StackPanel Grid.Row="0" Grid.Column="2" Panel.ZIndex="1"  HorizontalAlignment="Right" VerticalAlignment="Top" Orientation="Horizontal">
+                    <DatePicker x:Name="datetime_OpAn" Margin="10.5" Width="128" HorizontalAlignment="Right" VerticalAlignment="Center" CalendarClosed="ChangeAllCalendarDates">
+                        <DatePicker.BorderBrush>
+                            <LinearGradientBrush EndPoint="0.5,0" StartPoint="0.5,1">
+                                <GradientStop Color="#FFA3AEB9" Offset="0"/>
+                                <GradientStop Color="#FF8399A9" Offset="0.375"/>
+                                <GradientStop Color="#FF718597" Offset="0.375"/>
+                                <GradientStop Color="#FFB9B9B9" Offset="1"/>
+                            </LinearGradientBrush>
+                        </DatePicker.BorderBrush>
+                    </DatePicker>
+                    <Button x:Name="operational_export_button" Margin="10.5" FontSize="15" Content="Export" HorizontalAlignment="Left" Height="Auto" VerticalAlignment="Top"
+                            Width="138" RenderTransformOrigin="0.63,0.833" Click="_X_Chart_Export_button_Click"/>
+
+                </StackPanel>
+            </Grid>
+        </dxt:DXTabItem>
+        <dxt:DXTabItem Header="Retention Analysis" Foreground="#FF0C014F" FontWeight="Bold" Height="23" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Grid x:Name="RetentionAnalysisGrid" Height="Auto" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <dxc:ChartControl x:Name="retention_chart" Grid.ColumnSpan="3"  Grid.RowSpan="3" Foreground="#FF0C014F"  FontWeight="Bold" 
+IsTabStop="True" BorderBrush="#00000000" Background="#D3D3D3">
+                    <dxc:ChartControl.Titles>
+                        <dxc:Title x:Name="RetentionAnalysisTitle" Content="Analysis for Retention/Deployment Issues" />
+                    </dxc:ChartControl.Titles>
+                    <dxc:ChartControl.Legend>
+                        <dxc:Legend ReverseItems="True" Orientation="Vertical"/>
+                    </dxc:ChartControl.Legend>
+                    <dxc:XYDiagram2D x:Name="XYDiagram2D_Retention" Rotated="True" TextOptions.TextFormattingMode="Ideal" HorizontalAlignment="Stretch" MouseLeftButtonUp="MenuItem_Retention_ShowDetails">
+                        <dxc:XYDiagram2D.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem x:Name="showDetailsMenuItem_For_Ret_Analysis" Header="Show Details..." Click="MenuItem_Retention_ShowDetails" />
+                            </ContextMenu>
+                        </dxc:XYDiagram2D.ContextMenu>
+
+                        <dxc:BarSideBySideSeries2D x:Name="g2serie"  DisplayName="2G" BarWidth="0.8" DataSource="{Binding}" ArgumentDataMember="Key" ValueDataMember="Value" Brush="#5DBCD2">
+                            <dxc:BarSideBySideSeries2D.Model>
+                                <dxc:FlatBar2DModel/>
+                            </dxc:BarSideBySideSeries2D.Model>
+
+                        </dxc:BarSideBySideSeries2D>
+                        <dxc:BarSideBySideSeries2D x:Name="g3serie" DisplayName="3G" BarWidth="0.8" DataSource="{Binding}" ArgumentDataMember="Key" ValueDataMember="Value" Brush="#FFC000">
+                            <dxc:BarSideBySideSeries2D.Model>
+                                <dxc:FlatBar2DModel/>
+                            </dxc:BarSideBySideSeries2D.Model>
+
+                        </dxc:BarSideBySideSeries2D>
+                        <dxc:BarSideBySideSeries2D x:Name="g4serie" DisplayName="4G" BarWidth="0.8" DataSource="{Binding}" ArgumentDataMember="Key" ValueDataMember="Value" Brush="#9900CD">
+                            <dxc:BarSideBySideSeries2D.Model>
+                                <dxc:FlatBar2DModel/>
+                            </dxc:BarSideBySideSeries2D.Model>
+                        </dxc:BarSideBySideSeries2D>
+                        <dxc:XYDiagram2D.AxisY>
+                            <dxc:AxisY2D>
+                                <dxc:AxisY2D.WholeRange>
+                                    <!--<dxc:Range Name="ax2" MinValue="{Binding}" MaxValue="{Binding}"/> -->
+                                    <dxc:Range Name="XAxisScaleRetention" MinValue="{Binding}" MaxValue="{Binding}" SideMarginsValue="0"/>
+                                </dxc:AxisY2D.WholeRange>
+                                <dxc:AxisY2D.NumericScaleOptions>
+                                    <dxc:ContinuousNumericScaleOptions AutoGrid="False" GridSpacing="1"  />
+                                </dxc:AxisY2D.NumericScaleOptions>
+                            </dxc:AxisY2D>
+                        </dxc:XYDiagram2D.AxisY>
+                    </dxc:XYDiagram2D>
+                </dxc:ChartControl>
+
+                <StackPanel Grid.Row="0" Grid.Column="2" Panel.ZIndex="1"  HorizontalAlignment="Right" VerticalAlignment="Top" Orientation="Horizontal">
+                    <DatePicker x:Name="datetime_RetAn" Width="128" Margin="10.5" SelectedDateFormat="Long" HorizontalAlignment="Right" VerticalAlignment="Top" CalendarClosed="ChangeAllCalendarDates">
+                        <DatePicker.BorderBrush>
+                            <LinearGradientBrush EndPoint="0.5,0" StartPoint="0.5,1">
+                                <GradientStop Color="#FFA3AEB9" Offset="0"/>
+                                <GradientStop Color="#FF8399A9" Offset="0.375"/>
+                                <GradientStop Color="#FF718597" Offset="0.375"/>
+                                <GradientStop Color="#FFB9B9B9" Offset="1"/>
+                            </LinearGradientBrush>
+                        </DatePicker.BorderBrush>
+                    </DatePicker>
+                    <Button x:Name="retention_export_button" Margin="10.5" FontSize="15" Content="Export" HorizontalAlignment="Left" Height="24" VerticalAlignment="Top"
+                            Width="138" RenderTransformOrigin="0.63,0.833" Click="_X_Chart_Export_button_Click"/>
+                </StackPanel>
+            </Grid>
+
+
+        </dxt:DXTabItem>
+        <dxt:DXTabItem Header="Licensing Analysis" Foreground="#FF0C014F" FontWeight="Bold" Height="23" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <Grid Background="#D3D3D3">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Panel.ZIndex="1" Width="Auto" Margin="10" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1"  Height="40" Orientation="Horizontal"  HorizontalAlignment="Left" ClipToBounds="True">
+                    <!--<Border Height="20" Width="249" Background="#FF0C014F" ClipToBounds="True" HorizontalAlignment="Left"
+                                VerticalAlignment="Top"  BorderThickness="1.5" BorderBrush="White"> -->
+                    <TextBlock x:Name="txtBlock_Licensing_Details" Text="Licensing Issues 09 Mar 2017 " FontFamily="FF Cube OT Cond" 
+                                       ClipToBounds="True" FontSize="22" FontWeight="Bold" FontStyle="Normal" 
+                                       HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#2B579A" Width="Auto"/>
+                    <!--</Border>-->
+                </StackPanel>
+                <StackPanel Panel.ZIndex="1" Width="Auto" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Right" Orientation="Horizontal" ClipToBounds="True">
+                    <DatePicker x:Name="dateTime_license_details" Width="128" VerticalAlignment="Center" CalendarClosed="ChangeAllCalendarDates"/>
+                    <Button x:Name="btn_ExportDataGridToExcel" Margin="10"  Width="150" FontSize="15" Content="Export Data" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btn_ExportDataGridToExcel_Click" />
+                </StackPanel>
+                <DockPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4">
+                    <!--<ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch">-->
+                    <DataGrid x:Name="dataGrid_licensing_analysis" IsReadOnly="True" SelectionMode="Extended" 
+                                  CanUserReorderColumns="True" CanUserResizeColumns="True" CanUserResizeRows="True" CanUserSortColumns="True" 
+                                SelectionUnit="FullRow" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                ClipboardCopyMode="IncludeHeader"
+                                AutoGenerateColumns="False"
+                                >
+
+
+                        <DataGrid.Resources>
+                            <Style TargetType="{x:Type TextBlock}" x:Key="WrapText">
+                                <Setter Property="TextWrapping" Value="Wrap"/>
+                            </Style>
+                        </DataGrid.Resources>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding  SiteName}" Header="Site Name"  ElementStyle="{StaticResource WrapText}" Width="150"></DataGridTextColumn>
+                            <DataGridTextColumn Binding="{Binding   Region}" Header="Region" ElementStyle="{StaticResource WrapText}" Width="150"></DataGridTextColumn>
+                            <DataGridTextColumn Binding="{Binding   IndicatorPrefArea}" Header="Indicator Pref Area" ElementStyle="{StaticResource WrapText}" Width="150"></DataGridTextColumn>
+                            <DataGridTextColumn Binding="{Binding   NameofPrefArea}" Header="Name of Pref Area" ElementStyle="{StaticResource WrapText}" Width="150"></DataGridTextColumn>
+                            <DataGridTextColumn Binding="{Binding   Technology}" Header="Technology" ElementStyle="{StaticResource WrapText}" Width="80"></DataGridTextColumn>
+                            <DataGridTextColumn Binding="{Binding   DeactivationDateTime}" Header="Deactivation Date/Time" ElementStyle="{StaticResource WrapText}" Width="Auto"></DataGridTextColumn>
+                            <DataGridTextColumn Binding="{Binding   AffectedCoverage}"  Header="Affected Coverage" ElementStyle="{StaticResource WrapText}" Width="Auto"></DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <!--</ScrollViewer>-->
+                </DockPanel>
+
+            </Grid>
+        </dxt:DXTabItem>
+
+
+        <dxt:DXTabItem Header="Deactivated Analysis" Foreground="#FF0C014F" FontWeight="Bold" Height="23" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <Grid Background="#D3D3D3">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Panel.ZIndex="1" Width="Auto" Margin="10" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1"  Height="40" Orientation="Horizontal"  HorizontalAlignment="Left" ClipToBounds="True">
+                    <!--<Border Height="20" Width="249" Background="#FF0C014F" ClipToBounds="True" HorizontalAlignment="Left"
+                                VerticalAlignment="Top"  BorderThickness="1.5" BorderBrush="White"> -->
+                    <TextBlock x:Name="txtBlock_Deactivated_Details" Text="Deactivated Sites 09 Mar 2017 " FontFamily="FF Cube OT Cond" 
+                                       ClipToBounds="True" FontSize="22" FontWeight="Bold" FontStyle="Normal" 
+                                       HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#2B579A" Width="Auto"/>
+                    <!--</Border>-->
+                </StackPanel>
+                <StackPanel Panel.ZIndex="1" Width="Auto" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Right" Orientation="Horizontal" ClipToBounds="True">
+                    <DatePicker x:Name="dateTime_deactivated_details" Width="128" VerticalAlignment="Center" CalendarClosed="ChangeAllCalendarDates"/>
+                    <Button x:Name="btn_ExportDataGridToExcel_forDeact" Margin="10"  Width="150" FontSize="15" Content="Export Data" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btn_ExportDataGridToExcel_forDeact_Click" />
+                </StackPanel>
+                <DockPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4">
+                    <!--<ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch">-->
+                    <DataGrid x:Name="dataGrid_deactivated_analysis" IsReadOnly="True" SelectionMode="Extended" 
+                                  CanUserReorderColumns="True" CanUserResizeColumns="True" CanUserResizeRows="True" CanUserSortColumns="True" 
+                                SelectionUnit="FullRow" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                ClipboardCopyMode="IncludeHeader"
+                                AutoGenerateColumns="False"
+                                >
+
+
+                        <DataGrid.Resources>
+                            <Style TargetType="{x:Type TextBlock}" x:Key="WrapText">
+                                <Setter Property="TextWrapping" Value="Wrap"/>
+                            </Style>
+                        </DataGrid.Resources>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding  SiteName}" Header="Site Name"  ElementStyle="{StaticResource WrapText}" Width="150"></DataGridTextColumn>
+                            <DataGridTextColumn Binding="{Binding   Region}" Header="Region" ElementStyle="{StaticResource WrapText}" Width="150"></DataGridTextColumn>
+                           <!--" <DataGridTextColumn Binding="{Binding   IndicatorPrefArea}" Header="Indicator Pref Area" ElementStyle="{StaticResource WrapText}" Width="150"></DataGridTextColumn> -->
+                            <DataGridTextColumn Binding="{Binding   NameofPrefArea}" Header="Name of Pref Area" ElementStyle="{StaticResource WrapText}" Width="150"></DataGridTextColumn>
+                            <DataGridTextColumn Binding="{Binding   Technology}" Header="Technology" ElementStyle="{StaticResource WrapText}" Width="80"></DataGridTextColumn>
+                            <DataGridTextColumn Binding="{Binding   DeactivationDateTime}" Header="Deactivation Date/Time" ElementStyle="{StaticResource WrapText}" Width="*"></DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <!--</ScrollViewer>-->
+                </DockPanel>
+
+            </Grid>
+        </dxt:DXTabItem>
+
+
+
+
+
+
+
+
+        <dxt:DXTabItem Header="History" Foreground="#FF0C014F" FontWeight="Bold" Height="23" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Grid x:Name="HistoryGrid" Height="Auto" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Background="#D3D3D3" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Row="0" Grid.Column="0" Margin="6" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal">
+                    <ComboBox x:Name="combo_pref" ItemsSource="{Binding}" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" TabIndex="1" DropDownClosed="CleanUpHistoryChart">
+                        <ComboBoxItem Content="All" IsSelected="True" />
+                    </ComboBox>
+                    <ComboBox x:Name="combo_tech" HorizontalAlignment="Left" FontSize="14" VerticalAlignment="Top" Width="100" TabIndex="2" DropDownClosed="CleanUpHistoryChart">
+                        <ComboBoxItem Content="2G/3G/4G" IsSelected="True" TabIndex="1"/>
+                        <ComboBoxItem Content="2G" TabIndex="2"/>
+                        <ComboBoxItem Content="3G" TabIndex="3"/>
+                        <ComboBoxItem Content="4G" TabIndex="4"/>
+                    </ComboBox>
+                    <ComboBox x:Name="combo_pick_reason" Text="Reason" FontSize="14" HorizontalAlignment="Left" DropDownClosed="_Combo_pick_reason_DropDownClosed" VerticalAlignment="Top" Width="100" TabIndex="3">
+                        <ComboBoxItem Content="Show all" IsSelected="True" TabIndex="1"/>
+                        <ComboBoxItem Content="Operational" TabIndex="2"/>
+                        <ComboBoxItem Content="Retention" TabIndex="3"/>
+                        <ComboBoxItem Content="Licensing" TabIndex="4"/>
+                        <ComboBoxItem Content="Deactivated" TabIndex="5"/>
+                    </ComboBox>
+                    <ComboBox x:Name="combo_pick_specific"  HorizontalAlignment="Left" FontSize="14" VerticalAlignment="Top" Width="110" TabIndex="4" DropDownClosed="CleanUpHistoryChart">
+                        <ComboBoxItem Content="N/A" IsSelected="True" TabIndex="1"/>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="1" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Top" Orientation="Horizontal">
+                    <Label x:Name="label7" Content="FROM :" Margin="3" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    <DatePicker x:Name="dateTimePicker_his_from" Width="128" Margin="3" HorizontalAlignment="Left" VerticalAlignment="Top" TabIndex="5" CalendarClosed="CleanUpHistoryChart"/>
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="2" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+                    <Label x:Name="label8" Content="TO :" Margin="3" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    <DatePicker x:Name="dateTimePicker_his_to" Margin="3" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top" TabIndex="6" CalendarClosed="CleanUpHistoryChart"/>
+                    <Button x:Name="history_show_button" Content="Show" Margin="3" HorizontalAlignment="Right" FontSize="15" VerticalAlignment="Center" Width="75"  RenderTransformOrigin="-2.133,0.227" TabIndex="7" Click="_History_show_button_Click"/>
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="3" Margin="3" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal">
+                    <Button x:Name="history_export_button" Content="Export" HorizontalAlignment="Right" Height="Auto" FontSize="15" VerticalAlignment="Center" Width="75" TabIndex="8" Click="_X_Chart_Export_button_Click"/>
+                </StackPanel>
+                <dxc:ChartControl x:Name="history_chart" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Panel.ZIndex="1" 
+                                  HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Width="Auto" Height="Auto" Background="#D3D3D3" >
+                    <dxc:ChartControl.Titles>
+                        <dxc:Title x:Name="histitle" Margin="10,0,3,0"/>
+                    </dxc:ChartControl.Titles>
+                    <dxc:ChartControl.Legend>
+                        <dxc:Legend/>
+                    </dxc:ChartControl.Legend>
+                    <dxc:XYDiagram2D x:Name="XYDiagramHistory" EnableAxisXNavigation="False" HorizontalContentAlignment="Stretch" MouseLeftButtonUp="XYDiagramHistory_ShowDetails">
+
+                        <!--<dxc:XYDiagram2D.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem x:Name="showDetailsMenuItem_For_History_Tab" Header="Show Details..." Click="XYDiagramHistory_ShowDetails"/>
+                            </ContextMenu>
+
+                        </dxc:XYDiagram2D.ContextMenu>-->
+
+
+                        <dxc:XYDiagram2D.NavigationOptions>
+                            <dxc:NavigationOptions UseKeyboard="False" UseTouchDevice="False"/>
+                        </dxc:XYDiagram2D.NavigationOptions>
+
+                        <dxc:LineSeries2D x:Name="line4G" DisplayName="4G" DataSource="{Binding}" ArgumentDataMember="Key" ValueDataMember="Value" ToolTipEnabled="{x:Null}" Brush="#9900CD">
+                            <dxc:LineSeries2D.LineStyle>
+                                <dxc:LineStyle Thickness="4" />
+                            </dxc:LineSeries2D.LineStyle>
+
+                        </dxc:LineSeries2D>
+
+                        <dxc:LineSeries2D x:Name="line3G" DisplayName="3G" DataSource="{Binding}" ArgumentDataMember="Key" ValueDataMember="Value" ToolTipEnabled="{x:Null}" Brush="#FFC000">
+                            <dxc:LineSeries2D.LineStyle>
+                                <dxc:LineStyle Thickness="4" />
+                            </dxc:LineSeries2D.LineStyle>
+                        </dxc:LineSeries2D>
+
+                        <dxc:LineSeries2D x:Name="line2G" DisplayName="2G" DataSource="{Binding}" ArgumentDataMember="Key" ValueDataMember="Value"  ToolTipEnabled="{x:Null}" Brush="#5DBCD2">
+                            <dxc:LineSeries2D.LineStyle>
+                                <dxc:LineStyle Thickness="4" />
+                            </dxc:LineSeries2D.LineStyle>
+                        </dxc:LineSeries2D>
+
+                        <dxc:XYDiagram2D.AxisY>
+                            <dxc:AxisY2D>
+                                <dxc:AxisY2D.WholeRange>
+                                    <!--<dxc:Range Name="ax2" MinValue="{Binding}" MaxValue="{Binding}"/> -->
+                                    <dxc:Range Name="YAxisScaleHistory" MinValue="{Binding}" MaxValue="{Binding}" SideMarginsValue="0"/>
+                                </dxc:AxisY2D.WholeRange>
+                            </dxc:AxisY2D>
+                        </dxc:XYDiagram2D.AxisY>
+
+                        <dxc:XYDiagram2D.AxisX>
+                            <dxc:AxisX2D>
+                                <dxc:AxisX2D.WholeRange>
+                                    <!--<dxc:Range Name="ax2" MinValue="{Binding}" MaxValue="{Binding}"/> -->
+                                    <dxc:Range Name="XAxisScaleHistory" MinValue="{Binding}" MaxValue="{Binding}" SideMarginsValue="0"/>
+                                </dxc:AxisX2D.WholeRange>
+                            </dxc:AxisX2D>
+                        </dxc:XYDiagram2D.AxisX>
+
+                    </dxc:XYDiagram2D>
+                </dxc:ChartControl>
+
+            </Grid>
+        </dxt:DXTabItem>
+        <dxt:DXTabItem x:Name="TabItem" Header="Daily Site Availability" Foreground="#FF0C014F" FontWeight="Bold" Height="23" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Grid x:Name="DailySiteAvailGrid" Height="Auto" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Background="#D3D3D3" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Row="0" Grid.Column="0" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Top" Orientation="Horizontal">
+
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="1" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+                    <ComboBox x:Name="comboBox_pick_technology" Margin="3" HorizontalAlignment="Left" FontSize="15" VerticalAlignment="Center" Width="100" TabIndex="1" DropDownClosed="CleanUpAvailabilityChart">
+                        <ComboBoxItem Content="All Tech" TabIndex="1" IsSelected="True"/>
+                        <ComboBoxItem Content="2G" TabIndex="2"/>
+                        <ComboBoxItem Content="3G" TabIndex="3"/>
+                        <ComboBoxItem Content="4G" TabIndex="4"/>
+                    </ComboBox>
+                    <ComboBox x:Name="comboBox_pick_mode" Margin="3" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="15" Width="160" TabIndex="2" DropDownClosed="CleanUpAvailabilityChart">
+                        <ComboBoxItem Content="Ratio" TabIndex="1" IsSelected="True"/>
+                        <ComboBoxItem Content="Discrete Numbers" TabIndex="2"/>
+                    </ComboBox>
+                    <Label x:Name="lab" Content="FROM :" Margin="3" HorizontalAlignment="Left"  FontSize="15" VerticalAlignment="Center"/>
+                    <DatePicker x:Name="dateTimePicker_av_from" Margin="3" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.ColumnSpan="2" TabIndex="3" CalendarClosed="CleanUpAvailabilityChart"/>
+                    <Label x:Name="lab1" Content="TO :" Margin="3" HorizontalAlignment="Left"  FontSize="15" VerticalAlignment="Center" Grid.Column="1"/>
+                    <DatePicker x:Name="dateTimePicker_av_to" Margin="3" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1" TabIndex="4" CalendarClosed="CleanUpAvailabilityChart"/>
+                    <Button x:Name="daily_availability_showButton" Margin="3" Content="Show" HorizontalAlignment="Left" FontSize="15" VerticalAlignment="Center" Width="76"  RenderTransformOrigin="-2.133,0.227" TabIndex="5" Click="_Availability_in_time_showButton_Click"/>
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="3" Margin="3" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal">
+                    <Button x:Name="availabilityInTime_export_button" Margin="3" Content="Export" HorizontalAlignment="Left" Height="Auto" FontSize="15" VerticalAlignment="Center" Width="138" Grid.Column="1" TabIndex="6" Click="_X_Chart_Export_button_Click"/>
+                </StackPanel>
+                <dxc:ChartControl x:Name="availabilityInTime" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Panel.ZIndex="1" Width="Auto" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#D3D3D3">
+                    <dxc:ChartControl.Titles>
+                        <dxc:Title x:Name="avintime_title"/>
+                    </dxc:ChartControl.Titles>
+                    <dxc:ChartControl.Legend>
+                        <dxc:Legend/>
+                    </dxc:ChartControl.Legend>
+
+                    <dxc:XYDiagram2D EnableAxisXNavigation="False">
+                        <dxc:XYDiagram2D.NavigationOptions>
+                            <dxc:NavigationOptions UseKeyboard="False" UseMouse="False" UseTouchDevice="False"/>
+                        </dxc:XYDiagram2D.NavigationOptions>
+                        <dxc:XYDiagram2D.AxisY>
+                            <dxc:AxisY2D>
+                                <dxc:AxisY2D.WholeRange>
+                                    <dxc:Range Name="ax" MinValue="{Binding}" MaxValue="{Binding}"/>
+                                </dxc:AxisY2D.WholeRange>
+                            </dxc:AxisY2D>
+                        </dxc:XYDiagram2D.AxisY>
+
+                        <dxc:XYDiagram2D.AxisX>
+                            <dxc:AxisX2D>
+                                <dxc:AxisX2D.WholeRange>
+                                    <dxc:Range Name="DailyAvailabilityAxisX" MinValue="{Binding}" MaxValue="{Binding}"/>
+                                </dxc:AxisX2D.WholeRange>
+                            </dxc:AxisX2D>
+                        </dxc:XYDiagram2D.AxisX>
+
+                        <dxc:LineSeries2D x:Name="av4G" DisplayName="4G" DataSource="{Binding}" ArgumentDataMember="Key" ValueDataMember="Value" ToolTipEnabled="{x:Null}" Brush="#9900CD">
+                            <dxc:LineSeries2D.LineStyle>
+                                <dxc:LineStyle Thickness="4" />
+                            </dxc:LineSeries2D.LineStyle>
+                        </dxc:LineSeries2D>
+
+                        <dxc:LineSeries2D x:Name="av3G" DisplayName="3G" DataSource="{Binding}" ArgumentDataMember="Key" ValueDataMember="Value" ToolTipEnabled="{x:Null}" Brush="#FFC000">
+                            <dxc:LineSeries2D.LineStyle>
+                                <dxc:LineStyle Thickness="4" />
+                            </dxc:LineSeries2D.LineStyle>
+                        </dxc:LineSeries2D>
+
+                        <dxc:LineSeries2D x:Name="av2G" DisplayName="2G" DataSource="{Binding}" ArgumentDataMember="Key" ValueDataMember="Value"  ToolTipEnabled="{x:Null}" Brush="#5DBCD2">
+                            <dxc:LineSeries2D.LineStyle>
+                                <dxc:LineStyle Thickness="4" />
+                            </dxc:LineSeries2D.LineStyle>
+                        </dxc:LineSeries2D>
+
+                    </dxc:XYDiagram2D>
+                </dxc:ChartControl>
+            </Grid>
+        </dxt:DXTabItem>
+    </dxt:DXTabControl>
+</Window>

@@ -1,0 +1,19 @@
+﻿<Window x:Class="MANSR_VIEWER.LoadingScreen"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="LoadingScreen" Height="276.6" Width="397" WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        AllowsTransparency="True"
+        ShowInTaskbar="False"
+        >
+
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="Images/Splash_Screen.jpg" Stretch="None"/>
+        </Grid.Background>
+        <TextBlock HorizontalAlignment="Center"  Text="Initialization..." VerticalAlignment="Center" Name="ProgressTextBlock" Width="236" Margin="0,261,161,0" />
+        <ProgressBar x:Name="LScreenProgressBar" FontStyle="Normal" HorizontalAlignment="Left" Height="15" Margin="127,19,0,0" VerticalAlignment="Top" Width="141"/>
+
+    </Grid>
+
+</Window>
