@@ -36,7 +36,7 @@ namespace MANSR_VIEWER
         public MySqlConnection getConnection()
         {
             //establish connection to the database
-            string myConnectionString = "SERVER=10.66.3.167;DATABASE=wind;Pooling=false;UID=root;Password=ZAQ!2wsx;";
+            string myConnectionString = "SERVER=10.66.8.137;DATABASE=wind;Pooling=false;UID=mansruser;Password=ak99000@@;";
             MySqlConnection connection = new MySqlConnection(myConnectionString);
             return connection;
         }
